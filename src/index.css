@@ -238,74 +238,231 @@ a {
   background-clip: text;
 }
 
-/* Photo Carousel */
-.carousel-container {
-  perspective: 1200px;
+/* Photo Album */
+.album-section {
+  min-height: auto;
+  padding: 6rem 2rem 4rem;
+  background: linear-gradient(180deg, var(--deep-void), #0d001a, var(--deep-void));
+}
+
+.album-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.album-title {
+  font-family: var(--font-serif);
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 300;
+  background: linear-gradient(135deg, var(--rose-pink), var(--starlight-gold), var(--lavender-glow));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 0.1em;
+}
+
+.album-subtitle {
+  font-family: var(--font-sans);
+  color: var(--lavender-glow);
+  opacity: 0.6;
+  font-size: 0.95rem;
+  letter-spacing: 0.15em;
+}
+
+.album-title-line {
+  width: 120px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--rose-pink), transparent);
+  transform-origin: center;
+}
+
+.album-grid {
+  columns: 4;
+  column-gap: 14px;
+  max-width: 1300px;
+  margin: 0 auto;
+}
+
+.photo-card {
+  break-inside: avoid;
+  margin-bottom: 14px;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1), box-shadow 0.4s ease;
+  will-change: transform;
+  transform-style: preserve-3d;
+}
+
+.photo-card img {
   width: 100%;
   height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s ease, filter 0.4s ease;
+}
+
+.photo-card:hover img {
+  transform: scale(1.08);
+  filter: brightness(1.1) saturate(1.1);
+}
+
+.photo-card-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 50%, rgba(10, 0, 16, 0.7));
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  display: flex;
+  align-items: flex-end;
+  padding: 12px 14px;
+}
+
+.photo-card:hover .photo-card-overlay {
+  opacity: 1;
+}
+
+.photo-card-number {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  color: var(--lavender-glow);
+  letter-spacing: 0.1em;
+  opacity: 0.8;
+}
+
+.photo-card-glow {
+  position: absolute;
+  inset: -1px;
+  border-radius: 13px;
+  border: 1px solid transparent;
+  transition: border-color 0.4s ease, box-shadow 0.4s ease;
+  pointer-events: none;
+}
+
+.photo-card:hover .photo-card-glow {
+  border-color: rgba(255, 110, 180, 0.35);
+  box-shadow: 0 4px 30px rgba(255, 110, 180, 0.15), 0 0 60px rgba(255, 110, 180, 0.05);
+}
+
+.photo-card-shimmer {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, #1a0533 25%, #2d1b4e 37%, #1a0533 63%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+  border-radius: 12px;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Lightbox */
+.lightbox-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: rgba(5, 0, 10, 0.92);
+  backdrop-filter: blur(20px);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.carousel-track {
-  position: relative;
-  width: 300px;
-  height: 400px;
-  transform-style: preserve-3d;
+.lightbox-image {
+  max-width: 85vw;
+  max-height: 85vh;
+  object-fit: contain;
+  border-radius: 12px;
+  box-shadow: 0 0 80px rgba(255, 110, 180, 0.15);
+  user-select: none;
 }
 
-.carousel-card {
+.lightbox-close {
   position: absolute;
-  width: 300px;
-  height: 400px;
-  border-radius: 16px;
-  overflow: hidden;
-  backface-visibility: hidden;
-  transition: box-shadow 0.4s ease;
+  top: 1.5rem;
+  right: 1.5rem;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 110, 180, 0.3);
+  background: rgba(10, 0, 16, 0.6);
+  color: var(--pure-white);
+  font-size: 1.2rem;
   cursor: pointer;
+  z-index: 10001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
 }
 
-.carousel-card.active {
-  box-shadow:
-    0 0 40px rgba(255, 110, 180, 0.4),
-    0 0 80px rgba(255, 110, 180, 0.1);
+.lightbox-close:hover {
+  border-color: var(--rose-pink);
+  background: rgba(255, 110, 180, 0.15);
+  box-shadow: 0 0 20px rgba(255, 110, 180, 0.2);
 }
 
-.carousel-card-inner {
-  width: 100%;
-  height: 100%;
-  border-radius: 16px;
-  overflow: hidden;
-}
-
-.carousel-nav-btn {
+.lightbox-nav {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  border: 1px solid var(--rose-pink);
-  background: rgba(255, 110, 180, 0.1);
-  color: var(--rose-pink);
-  font-size: 1.5rem;
+  border: 1px solid rgba(255, 110, 180, 0.25);
+  background: rgba(10, 0, 16, 0.5);
+  color: var(--pure-white);
+  font-size: 2rem;
   cursor: pointer;
-  z-index: 10;
-  backdrop-filter: blur(10px);
+  z-index: 10001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: all 0.3s ease;
+  line-height: 1;
 }
 
-.carousel-nav-btn:hover {
-  background: rgba(255, 110, 180, 0.3);
-  box-shadow: 0 0 20px rgba(255, 110, 180, 0.3);
+.lightbox-nav:hover {
+  border-color: var(--rose-pink);
+  background: rgba(255, 110, 180, 0.15);
+  box-shadow: 0 0 20px rgba(255, 110, 180, 0.2);
 }
 
-.carousel-nav-btn.prev {
-  left: -80px;
+.lightbox-prev { left: 1.5rem; }
+.lightbox-next { right: 1.5rem; }
+
+.lightbox-counter {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  color: var(--lavender-glow);
+  letter-spacing: 0.2em;
+  opacity: 0.6;
 }
-.carousel-nav-btn.next {
-  right: -80px;
+
+@media (max-width: 1024px) {
+  .album-grid { columns: 3; }
+}
+@media (max-width: 768px) {
+  .album-grid { columns: 2; column-gap: 10px; }
+  .photo-card { margin-bottom: 10px; }
+  .album-section { padding: 4rem 1rem 3rem; }
+  .lightbox-image { max-width: 95vw; max-height: 80vh; }
+  .lightbox-prev { left: 0.5rem; }
+  .lightbox-next { right: 0.5rem; }
+}
+@media (max-width: 480px) {
+  .album-grid { columns: 1; }
 }
 
 /* Message Section */
