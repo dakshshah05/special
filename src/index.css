@@ -372,6 +372,8 @@ a {
   cursor: pointer;
   transform-style: preserve-3d;
   transition: transform 0.4s ease, box-shadow 0.4s ease;
+  background: #0a0010; /* Dark frame for contained images */
+  border: 1px solid rgba(255, 110, 180, 0.1); /* Subtle frame edge */
 }
 
 .scroll-card:hover {
@@ -381,7 +383,7 @@ a {
 .scroll-card img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain; /* Prevents images from being cut */
   display: block;
   transition: transform 0.8s cubic-bezier(0.165, 0.84, 0.44, 1), filter 0.5s ease;
   filter: grayscale(20%) brightness(0.8);
