@@ -12,11 +12,33 @@ export function useCursor() {
     let rafId = null;
     let isExpanded = false;
     let needsUpdate = true;
+    
+    // Trail particles tracking
+    let lastSpawnTime = 0;
+
+    const spawnTrailParticle = (x, y) => {
+      const particle = document.createElement('div');
+      particle.className = 'cursor-trail-particle';
+      particle.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+      document.body.appendChild(particle);
+      
+      // Cleanup after animation
+      setTimeout(() => {
+        if (particle.parentNode) particle.remove();
+      }, 700);
+    };
 
     const onMouseMove = (e) => {
       mouseX = e.clientX;
       mouseY = e.clientY;
       needsUpdate = true;
+      
+      const now = Date.now();
+      // Drop a particle every ~30ms of movement to create a magical dust trail
+      if (now - lastSpawnTime > 30) {
+        spawnTrailParticle(mouseX, mouseY);
+        lastSpawnTime = now;
+      }
     };
 
     const onMouseOver = (e) => {

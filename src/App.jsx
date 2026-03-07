@@ -13,6 +13,7 @@ import PhotoCarousel from './components/PhotoCarousel';
 import MessageSection from './components/MessageSection';
 import CakeSection from './components/CakeSection';
 import WishesSection from './components/WishesSection';
+import MicroInteractions from './components/MicroInteractions';
 
 gsap.registerPlugin(ScrollTrigger, TextPlugin);
 
@@ -57,6 +58,7 @@ export default function App() {
   return (
     <>
       <CustomCursor />
+      <MicroInteractions />
       <Navigation />
 
       <Loader onComplete={() => setLoaded(true)} />
