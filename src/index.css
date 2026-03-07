@@ -70,37 +70,24 @@ a {
 /* Custom cursor styles */
 .custom-cursor {
   position: fixed;
+  top: 0;
+  left: 0;
   width: 20px;
   height: 20px;
   border-radius: 50%;
   background: radial-gradient(circle, var(--rose-pink), transparent);
   pointer-events: none;
   z-index: 99999;
-  transform: translate(-50%, -50%);
-  transition:
-    width 0.3s ease,
-    height 0.3s ease,
-    background 0.3s ease,
-    filter 0.3s ease;
+  will-change: transform;
+  transition: width 0.3s ease, height 0.3s ease, background 0.3s ease;
   mix-blend-mode: screen;
 }
 
 .custom-cursor.expanded {
-  width: 80px;
-  height: 80px;
+  width: 60px;
+  height: 60px;
   background: radial-gradient(circle, var(--lavender-glow), transparent);
-  filter: blur(4px);
-}
-
-/* Click burst */
-.click-burst {
-  position: fixed;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--starlight-gold);
-  pointer-events: none;
-  z-index: 99998;
+  filter: blur(3px);
 }
 
 /* Loader styles */

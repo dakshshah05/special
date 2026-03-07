@@ -1,84 +1,65 @@
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef } from 'react';
 
 export function useCursor() {
   const cursorRef = useRef(null);
-  const posRef = useRef({ x: 0, y: 0 });
-  const targetRef = useRef({ x: 0, y: 0 });
-  const expandedRef = useRef(false);
-
-  const lerp = (a, b, t) => a + (b - a) * t;
 
   useEffect(() => {
     const cursor = cursorRef.current;
     if (!cursor) return;
 
+    let mouseX = 0, mouseY = 0;
+    let curX = 0, curY = 0;
+    let rafId = null;
+    let isExpanded = false;
+    let needsUpdate = true;
+
     const onMouseMove = (e) => {
-      targetRef.current.x = e.clientX;
-      targetRef.current.y = e.clientY;
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      needsUpdate = true;
     };
 
     const onMouseOver = (e) => {
-      const target = e.target;
-      if (target.tagName === 'BUTTON' || target.tagName === 'A' || 
-          target.classList.contains('interactive') || target.closest('button') || target.closest('a')) {
-        expandedRef.current = true;
-        cursor.classList.add('expanded');
+      const t = e.target;
+      if (t.closest && (t.closest('button') || t.closest('a') || t.closest('.interactive'))) {
+        if (!isExpanded) {
+          isExpanded = true;
+          cursor.classList.add('expanded');
+        }
       }
     };
 
     const onMouseOut = (e) => {
-      const target = e.target;
-      if (target.tagName === 'BUTTON' || target.tagName === 'A' || 
-          target.classList.contains('interactive') || target.closest('button') || target.closest('a')) {
-        expandedRef.current = false;
+      const t = e.target;
+      if (t.closest && (t.closest('button') || t.closest('a') || t.closest('.interactive'))) {
+        isExpanded = false;
         cursor.classList.remove('expanded');
       }
     };
 
-    const onClick = (e) => {
-      // Create burst particles
-      for (let i = 0; i < 8; i++) {
-        const particle = document.createElement('div');
-        particle.className = 'click-burst';
-        particle.style.left = e.clientX + 'px';
-        particle.style.top = e.clientY + 'px';
-        document.body.appendChild(particle);
-
-        const angle = (Math.PI * 2 / 8) * i;
-        const velocity = 30 + Math.random() * 30;
-        const tx = Math.cos(angle) * velocity;
-        const ty = Math.sin(angle) * velocity;
-
-        particle.animate([
-          { transform: 'translate(-50%, -50%) scale(1)', opacity: 1 },
-          { transform: `translate(calc(-50% + ${tx}px), calc(-50% + ${ty}px)) scale(0)`, opacity: 0 }
-        ], { duration: 500, easing: 'ease-out' });
-
-        setTimeout(() => particle.remove(), 500);
-      }
-    };
-
-    let animId;
     const animate = () => {
-      posRef.current.x = lerp(posRef.current.x, targetRef.current.x, 0.1);
-      posRef.current.y = lerp(posRef.current.y, targetRef.current.y, 0.1);
-      cursor.style.left = posRef.current.x + 'px';
-      cursor.style.top = posRef.current.y + 'px';
-      animId = requestAnimationFrame(animate);
+      if (needsUpdate) {
+        curX += (mouseX - curX) * 0.12;
+        curY += (mouseY - curY) * 0.12;
+        cursor.style.transform = `translate3d(${curX - 10}px, ${curY - 10}px, 0)`;
+
+        if (Math.abs(mouseX - curX) < 0.5 && Math.abs(mouseY - curY) < 0.5) {
+          needsUpdate = false;
+        }
+      }
+      rafId = requestAnimationFrame(animate);
     };
 
-    window.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mouseover', onMouseOver);
-    document.addEventListener('mouseout', onMouseOut);
-    window.addEventListener('click', onClick);
-    animId = requestAnimationFrame(animate);
+    window.addEventListener('mousemove', onMouseMove, { passive: true });
+    document.addEventListener('mouseover', onMouseOver, { passive: true });
+    document.addEventListener('mouseout', onMouseOut, { passive: true });
+    rafId = requestAnimationFrame(animate);
 
     return () => {
       window.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseover', onMouseOver);
       document.removeEventListener('mouseout', onMouseOut);
-      window.removeEventListener('click', onClick);
-      cancelAnimationFrame(animId);
+      cancelAnimationFrame(rafId);
     };
   }, []);
 
