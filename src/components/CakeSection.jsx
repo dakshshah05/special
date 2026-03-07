@@ -1,5 +1,4 @@
-﻿/* eslint-disable no-unused-vars, react-hooks/purity, react-hooks/immutability, react-hooks/exhaustive-deps, react-hooks/rules-of-hooks */
-import React, { useRef, useState, useMemo, memo, useCallback } from 'react';
+﻿import React, { useRef, useState, useMemo, memo, useCallback } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
@@ -135,10 +134,7 @@ export default memo(function CakeSection() {
       y: 30 + Math.random() * 30,
       rot: (Math.random() - 0.5) * 30
     };
-    setSlices(prev => {
-      const rotOffset = (Math.random() - 0.5) * 30; // Random exit rotation
-      return [...prev.slice(-4), { ...newSlice, exitY: -100 - (Math.random() * 50), exitRot: rotOffset }];
-    });
+    setSlices(prev => [...prev.slice(-4), newSlice]);
   }, []);
 
   return (
@@ -151,7 +147,7 @@ export default memo(function CakeSection() {
         fontWeight: 300, color: 'var(--rose-pink)', marginBottom: '1rem',
         letterSpacing: '0.1em', textAlign: 'center', zIndex: 2,
       }}>
-        Make a Wish âœ¦
+        Make a Wish ✦
       </h2>
       <div className="cake-canvas interactive" style={{ maxWidth: '800px', margin: '0 auto', position: 'relative' }}>
         <Canvas
@@ -179,22 +175,21 @@ export default memo(function CakeSection() {
                 textShadow: '0 0 10px rgba(255,215,0,0.5)'
               }}
               initial={{ opacity: 1, y: 0, scale: 0.5, rotate: s.rot }}
-              animate={{ opacity: 0, y: s.exitY || -100, scale: 1.2, rotate: s.rot + (s.exitRot || 10) }}
+              animate={{ opacity: 0, y: -100, scale: 1.2, rotate: s.rot + 10 }}
               transition={{ duration: 1.5, ease: 'easeOut' }}
               onAnimationComplete={() => setSlices(prev => prev.filter(x => x.id !== s.id))}
             >
-              +1 Slice ðŸ°
+              +1 Slice 🍰
             </motion.div>
           ))}
         </AnimatePresence>
       </div>
 
       <p className="blow-text" style={{ transition: 'opacity 0.5s' }}>
-        {!blownOut && 'âœ¨ Click the cake to blow out the candles âœ¨'}
-        {blownOut && sliceCount === 0 && 'ðŸŽ‰ Wish granted! Click the cake to grab a slice!'}
-        {blownOut && sliceCount > 0 && `You've eaten ${sliceCount} slice${sliceCount > 1 ? 's' : ''} ðŸ°`}
+        {!blownOut && '✨ Click the cake to blow out the candles ✨'}
+        {blownOut && sliceCount === 0 && '🎉 Wish granted! Click the cake to grab a slice!'}
+        {blownOut && sliceCount > 0 && `You've eaten ${sliceCount} slice${sliceCount > 1 ? 's' : ''} 🍰`}
       </p>
     </section>
   );
 });
-

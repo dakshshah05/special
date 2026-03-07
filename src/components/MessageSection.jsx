@@ -1,5 +1,4 @@
-﻿/* eslint-disable no-unused-vars, react-hooks/purity, react-hooks/immutability, react-hooks/exhaustive-deps, react-hooks/rules-of-hooks */
-import React, { useEffect, useRef, memo, useMemo } from 'react';
+﻿import React, { useEffect, useRef, memo } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -7,13 +6,13 @@ gsap.registerPlugin(ScrollTrigger);
 
 // CSS star dots instead of Canvas
 const StarDots = memo(function StarDots() {
-  const stars = useMemo(() => Array.from({ length: 40 }, (_, i) => ({
+  const stars = Array.from({ length: 40 }, (_, i) => ({
     left: Math.random() * 100,
     top: Math.random() * 100,
     size: 1 + Math.random() * 2,
     delay: Math.random() * 3,
     duration: 2 + Math.random() * 3,
-  })), []);
+  }));
 
   return (
     <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
@@ -41,7 +40,7 @@ const EnvelopeIcon = memo(function EnvelopeIcon({ progress }) {
       <svg viewBox="0 0 80 60" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: '100%', height: '100%' }}>
         <rect x="2" y="15" width="76" height="43" rx="4" fill="none" stroke="#ff6eb4" strokeWidth="1.5" opacity="0.8" />
         <path d={`M2 15 L40 ${15 + (1 - progress) * 25} L78 15`} fill="none" stroke="#ffd700" strokeWidth="1.5" opacity="0.8" />
-        <text x="40" y="42" textAnchor="middle" fill="#ff6eb4" fontSize="16" style={{ opacity: progress }}>ðŸ’Œ</text>
+        <text x="40" y="42" textAnchor="middle" fill="#ff6eb4" fontSize="16" style={{ opacity: progress }}>💌</text>
       </svg>
     </div>
   );
@@ -49,13 +48,13 @@ const EnvelopeIcon = memo(function EnvelopeIcon({ progress }) {
 
 const message = `Dear Shariya,
 
-As you leave your teenage years behind and step into the beautiful world of your twenties, know that every moment has been a gift. You are not just turning a page â€” you are writing a whole new chapter, filled with magic, love, and infinite possibility.
+As you leave your teenage years behind and step into the beautiful world of your twenties, know that every moment has been a gift. You are not just turning a page — you are writing a whole new chapter, filled with magic, love, and infinite possibility.
 
 The stars themselves seem to shine a little brighter when you smile, and the universe conspires to make your dreams come true. You are brave, you are brilliant, and you are so deeply loved.
 
 Here's to twenty years of you making the world a more beautiful place. May this year bring you everything your heart desires and more.
 
-Happy 20th Birthday, Shariya ðŸŒ¹`;
+Happy 20th Birthday, Shariya 🌹`;
 
 export default memo(function MessageSection() {
   const sectionRef = useRef(null);
@@ -117,4 +116,3 @@ export default memo(function MessageSection() {
     </section>
   );
 });
-

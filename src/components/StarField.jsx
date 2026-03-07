@@ -1,5 +1,4 @@
-﻿/* eslint-disable no-unused-vars, react-hooks/purity, react-hooks/immutability, react-hooks/exhaustive-deps, react-hooks/rules-of-hooks */
-import React, { useRef, useMemo } from 'react';
+﻿import React, { useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
@@ -42,19 +41,15 @@ export default function StarField({ count = 5000 }) {
     for (let i = 0; i < count; i++) {
       const i3 = i * 3;
       // Spread stars in a large sphere
-      // eslint-disable-next-line react-hooks/purity
-      const radius = 5 + Math.random() * 40;
-      // eslint-disable-next-line react-hooks/purity
+      const radius = 5 + Math.random() * 45;
       const theta = Math.random() * Math.PI * 2;
-      // eslint-disable-next-line react-hooks/purity
       const phi = Math.acos(2 * Math.random() - 1);
 
       positions[i3] = radius * Math.sin(phi) * Math.cos(theta);
       positions[i3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
       positions[i3 + 2] = radius * Math.cos(phi) - 20;
-      // eslint-disable-next-line react-hooks/purity
-      sizes[i] = Math.random() * 2.5 + 0.5;
-      // eslint-disable-next-line react-hooks/purity
+
+      sizes[i] = Math.random() * 3 + 0.5;
       phases[i] = Math.random() * Math.PI * 2;
     }
 
@@ -106,4 +101,3 @@ export default function StarField({ count = 5000 }) {
     </points>
   );
 }
-
