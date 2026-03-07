@@ -14,6 +14,7 @@ import MessageSection from './components/MessageSection';
 import CakeSection from './components/CakeSection';
 import WishesSection from './components/WishesSection';
 import MicroInteractions from './components/MicroInteractions';
+import FinalSurprise from './components/FinalSurprise';
 
 gsap.registerPlugin(ScrollTrigger, TextPlugin);
 
@@ -90,6 +91,9 @@ export default function App() {
 
         {/* Final Wishes + Fireworks */}
         <WishesSection />
+
+        {/* The Final 'Open if you love me' Letter */}
+        <FinalSurprise />
 
         {/* Footer */}
         <footer style={{
