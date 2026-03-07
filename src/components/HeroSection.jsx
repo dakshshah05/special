@@ -1,6 +1,6 @@
-import React, { useRef, useEffect, useMemo, memo } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
-import { Float } from '@react-three/drei';
+import React, { useRef, useEffect, useState, useMemo, memo } from 'react';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
+import { Float, Line } from '@react-three/drei';
 import * as THREE from 'three';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -121,6 +121,75 @@ const RosePetals = memo(function RosePetals({ count = 15 }) {
   );
 });
 
+// Interactive Constellation (S shape for Shariya)
+const InteractiveConstellation = memo(function InteractiveConstellation() {
+  const [activePoints, setActivePoints] = useState([]);
+  const [isPointerDown, setIsPointerDown] = useState(false);
+  const { viewport } = useThree();
+
+  // Define points for an elegant "S" shape
+  const sPoints = useMemo(() => [
+    new THREE.Vector3(1.5, 2.5, 0),
+    new THREE.Vector3(0, 3, 0),
+    new THREE.Vector3(-1.5, 2.5, 0),
+    new THREE.Vector3(-2, 1, 0),
+    new THREE.Vector3(-1, -0.5, 0),
+    new THREE.Vector3(1, -1.5, 0),
+    new THREE.Vector3(2, -3, 0),
+    new THREE.Vector3(1.5, -4.5, 0),
+    new THREE.Vector3(0, -5, 0),
+    new THREE.Vector3(-1.5, -4.5, 0),
+  ], []);
+
+  // Use a slightly larger invisible hit area for each star
+  return (
+    <group 
+      onPointerDown={() => setIsPointerDown(true)} 
+      onPointerUp={() => setIsPointerDown(false)}
+      onPointerLeave={() => setIsPointerDown(false)}
+    >
+      {/* Render the stars in the shape */}
+      {sPoints.map((pos, i) => {
+        const isActive = activePoints.includes(i);
+        return (
+          <mesh 
+            key={i} 
+            position={pos}
+            onPointerOver={() => {
+              if (isPointerDown && !isActive) {
+                setActivePoints(prev => [...prev, i]);
+              }
+            }}
+          >
+            {/* The visible star */}
+            <sphereGeometry args={[isActive ? 0.15 : 0.08, 16, 16]} />
+            <meshBasicMaterial color={isActive ? "#ffd700" : "#ffffff"} />
+            {/* Invisible larger hit area for easier dragging */}
+            <mesh>
+              <sphereGeometry args={[0.8, 8, 8]} />
+              <meshBasicMaterial visible={false} />
+            </mesh>
+            {isActive && (
+              <pointLight distance={3} intensity={1} color="#ffd700" />
+            )}
+          </mesh>
+        );
+      })}
+
+      {/* Draw the connecting lines */}
+      {activePoints.length > 1 && (
+        <Line
+          points={activePoints.map(i => sPoints[i])}
+          color="#ff6eb4"
+          lineWidth={3}
+          transparent
+          opacity={0.8}
+        />
+      )}
+    </group>
+  );
+});
+
 // Simple 3D elements instead of text geometry
 const HeroElements = memo(function HeroElements() {
   const groupRef = useRef();
@@ -187,6 +256,7 @@ export default function HeroSection() {
           <StarField count={2000} />
           <RosePetals count={15} />
           <HeroElements />
+          <InteractiveConstellation />
         </Canvas>
       </div>
 
