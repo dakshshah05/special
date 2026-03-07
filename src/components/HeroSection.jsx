@@ -245,13 +245,14 @@ export default function HeroSection() {
 
   return (
     <section id="hero" ref={sectionRef} className="section" style={{ position: 'relative' }}>
-      <div style={{ position: 'absolute', inset: 0, zIndex: 1 }}>
+      <div style={{ position: 'absolute', inset: 0, zIndex: 1, pointerEvents: 'auto' }}>
         <Canvas
           camera={{ position: [0, 0, 8], fov: 60 }}
           gl={{ antialias: false, alpha: true, powerPreference: 'high-performance' }}
           dpr={[1, 1.5]}
           performance={{ min: 0.5 }}
           style={{ background: 'transparent' }}
+          raycaster={{ computeOffsets: (e) => ({ offsetX: e.clientX, offsetY: e.clientY }) }}
         >
           <StarField count={2000} />
           <RosePetals count={15} />
@@ -283,7 +284,7 @@ export default function HeroSection() {
           ✦ Turning 20 · March 11th ✦
         </div>
       </div>
-      <div className="hero-overlay" />
+      <div className="hero-overlay" style={{ pointerEvents: 'none' }} />
     </section>
   );
 }
