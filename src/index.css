@@ -615,6 +615,7 @@ a {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  min-height: 80vh;
 }
 
 .wishes-title {
@@ -626,41 +627,202 @@ a {
   -webkit-text-fill-color: transparent;
   background-clip: text;
   text-align: center;
-  min-height: 6rem;
+}
+
+.wishes-subtitle {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  color: var(--lavender-glow);
+  margin-top: 1rem;
+  font-style: italic;
+  opacity: 0.8;
 }
 
 .wish-button {
-  margin-top: 2rem;
-  padding: 1rem 2.5rem;
+  margin-top: 3rem;
+  padding: 1.2rem 3rem;
   border: 1px solid var(--starlight-gold);
-  background: transparent;
+  background: rgba(10, 0, 16, 0.6);
   color: var(--starlight-gold);
   font-family: var(--font-serif);
-  font-size: 1.25rem;
+  font-size: 1.4rem;
   border-radius: 50px;
   cursor: pointer;
   position: relative;
   overflow: hidden;
   transition: all 0.4s ease;
+  backdrop-filter: blur(10px);
 }
 
 .wish-button:hover {
-  background: rgba(255, 215, 0, 0.1);
-  box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+  background: rgba(255, 215, 0, 0.15);
+  box-shadow: 0 0 40px rgba(255, 215, 0, 0.3);
   transform: scale(1.05);
 }
 
-.shimmer-overlay {
+/* Wish Interactive Experience */
+.wish-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.wish-sky {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 30%, #1a0533 0%, #05000a 60%, var(--deep-void) 100%);
+  opacity: 0.95;
+  z-index: -1;
+}
+
+.wish-close {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 110, 180, 0.3);
+  background: transparent;
+  color: var(--starlight-gold);
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 10001;
+}
+
+.wish-close:hover {
+  border-color: var(--rose-pink);
+  background: rgba(255, 110, 180, 0.1);
+  transform: scale(1.1);
+}
+
+.wish-content {
+  text-align: center;
+  width: 100%;
+  max-width: 600px;
+  padding: 2rem;
+  z-index: 10;
+}
+
+.wish-step-input h2, .wish-step-message h2 {
+  font-family: var(--font-serif);
+  font-size: clamp(2rem, 4vw, 3rem);
+  color: var(--starlight-gold);
+  font-weight: 300;
+  margin-bottom: 3rem;
+  text-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+}
+
+.wish-step-input form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  align-items: center;
+}
+
+.wish-step-input input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(255, 110, 180, 0.4);
+  padding: 1rem 0;
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  color: var(--pure-white);
+  text-align: center;
+  outline: none;
+  transition: border-color 0.3s ease;
+  font-style: italic;
+}
+
+.wish-step-input input::placeholder {
+  color: rgba(232, 196, 255, 0.3);
+}
+
+.wish-step-input input:focus {
+  border-bottom-color: var(--starlight-gold);
+}
+
+.wish-step-input button {
+  padding: 1rem 3rem;
+  background: linear-gradient(135deg, var(--rose-pink), var(--starlight-gold));
+  border: none;
+  border-radius: 50px;
+  color: #0a0010;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 1.1rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.wish-step-input button:disabled {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.3);
+  cursor: not-allowed;
+}
+
+.wish-step-input button:not(:disabled):hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(255, 110, 180, 0.4);
+}
+
+.wish-step-message p {
+  font-family: var(--font-sans);
+  font-size: 1.2rem;
+  color: var(--lavender-glow);
+  line-height: 1.6;
+  opacity: 0.9;
+}
+
+.wish-signature {
+  margin-top: 3rem;
+  font-family: var(--font-serif);
+  font-size: 1.5rem !important;
+  font-style: italic;
+  color: var(--pure-white) !important;
+}
+
+/* Shooting Star Animation */
+.shooting-star-container {
   position: fixed;
   inset: 0;
   pointer-events: none;
-  z-index: 9999;
-  background: radial-gradient(
-    circle at center,
-    rgba(255, 215, 0, 0.15),
-    transparent 70%
-  );
-  opacity: 0;
+  z-index: 5;
+  overflow: hidden;
+}
+
+.shooting-star {
+  position: absolute;
+  width: 150px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--pure-white));
+  border-radius: 50%;
+  transform: rotate(35deg);
+  filter: drop-shadow(0 0 10px var(--pure-white)) drop-shadow(0 0 30px var(--starlight-gold));
+}
+
+.shooting-star::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 12px;
+  height: 12px;
+  background: var(--pure-white);
+  border-radius: 50%;
+  box-shadow: 0 0 20px 4px var(--starlight-gold);
 }
 
 /* Navigation */

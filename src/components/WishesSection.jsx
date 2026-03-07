@@ -1,129 +1,152 @@
-import React, { useEffect, useRef, useState, useCallback, memo } from 'react';
+import React, { useEffect, useRef, useState, memo } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import gsap from 'gsap';
 
-// CSS firework particles
-const CSSFireworks = memo(function CSSFireworks({ active }) {
-  if (!active) return null;
-
-  const colors = ['#ff6eb4', '#ffd700', '#e8c4ff', '#ffffff'];
+// Ambient Firework Background for the section itself
+const CSSFireworks = memo(function CSSFireworks() {
   const particles = Array.from({ length: 40 }, (_, i) => {
     const angle = (i / 40) * Math.PI * 2;
-    const speed = 80 + Math.random() * 120;
+    const speed = 60 + Math.random() * 100;
     return {
+      id: i,
       tx: Math.cos(angle) * speed,
       ty: Math.sin(angle) * speed - 40,
-      color: colors[i % colors.length],
-      delay: Math.random() * 0.3,
-      size: 3 + Math.random() * 4,
+      color: ['#ff6eb4', '#ffd700', '#e8c4ff', '#ffffff'][i % 4],
+      delay: Math.random() * 0.5,
+      size: 2 + Math.random() * 3,
     };
   });
 
   return (
-    <div style={{ position: 'absolute', top: '40%', left: '50%', zIndex: 1 }}>
-      {particles.map((p, i) => (
-        <div key={i} style={{
-          position: 'absolute',
-          width: `${p.size}px`, height: `${p.size}px`,
-          borderRadius: '50%',
-          background: p.color,
-          boxShadow: `0 0 6px ${p.color}`,
-          animation: `firework 2s ease-out ${p.delay}s forwards`,
+    <div style={{ position: 'absolute', top: '30%', left: '50%', zIndex: 1 }}>
+      {particles.map(p => (
+        <div key={p.id} style={{
+          position: 'absolute', width: p.size, height: p.size,
+          borderRadius: '50%', background: p.color,
+          boxShadow: `0 0 8px ${p.color}`,
+          animation: `firework 3s ease-out ${p.delay}s infinite`,
           '--tx': `${p.tx}px`, '--ty': `${p.ty}px`,
         }} />
       ))}
-      <style>{`
-        @keyframes firework {
-          0% { transform: translate(0, 0) scale(1); opacity: 1; }
-          70% { opacity: 0.8; }
-          100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
-        }
-      `}</style>
     </div>
   );
 });
 
-export default memo(function WishesSection() {
-  const sectionRef = useRef(null);
-  const titleRef = useRef(null);
-  const [showFireworks, setShowFireworks] = useState(false);
-  const [showShimmer, setShowShimmer] = useState(false);
-  const shimmerRef = useRef(null);
-  const hasAnimated = useRef(false);
-
-  useEffect(() => {
-    const section = sectionRef.current;
-    const title = titleRef.current;
-    if (!section || !title) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !hasAnimated.current) {
-          hasAnimated.current = true;
-          const text = 'Happy 20th Birthday';
-          let idx = 0;
-          title.textContent = '';
-          const interval = setInterval(() => {
-            if (idx < text.length) {
-              title.textContent = text.substring(0, idx + 1);
-              idx++;
-            } else {
-              clearInterval(interval);
-              gsap.to(title, {
-                filter: 'drop-shadow(0 0 30px rgba(255,215,0,0.6)) drop-shadow(0 0 60px rgba(255,110,180,0.3))',
-                duration: 1, ease: 'power2.inOut',
-              });
-              setTimeout(() => setShowFireworks(true), 500);
-            }
-          }, 100);
-        }
-      },
-      { threshold: 0.5 }
-    );
-
-    observer.observe(section);
-    return () => observer.disconnect();
-  }, []);
-
-  const handleWishClick = useCallback(() => {
-    setShowShimmer(true);
-    if (shimmerRef.current) {
-      gsap.fromTo(shimmerRef.current, { opacity: 0 }, {
-        opacity: 1, duration: 0.5, ease: 'power2.in',
-        onComplete: () => {
-          gsap.to(shimmerRef.current, { opacity: 0, duration: 2, ease: 'power2.out', delay: 0.5 });
-        }
-      });
-    }
-  }, []);
+// The Interactive Wish Experience
+const WishExperience = ({ onClose }) => {
+  const [step, setStep] = useState('input'); // input -> wishing -> star -> complete
+  const [wish, setWish] = useState('');
+  
+  const handleWishSubmit = (e) => {
+    e.preventDefault();
+    if (!wish.trim()) return;
+    
+    // Sequence of events
+    setStep('wishing');
+    setTimeout(() => setStep('star'), 2500);
+    setTimeout(() => setStep('complete'), 5500);
+  };
 
   return (
-    <section id="wishes" ref={sectionRef} className="section wishes-section">
-      <CSSFireworks active={showFireworks} />
+    <motion.div className="wish-overlay"
+      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+      transition={{ duration: 1 }}>
+        
+      {/* Sky Background */}
+      <div className="wish-sky" />
 
-      <div style={{ position: 'relative', zIndex: 2, textAlign: 'center' }}>
-        <div ref={titleRef} className="wishes-title" />
-        <div style={{
-          fontFamily: 'var(--font-serif)', fontSize: '1.5rem',
-          color: 'var(--lavender-glow)', marginTop: '1rem', fontStyle: 'italic',
-          opacity: showFireworks ? 1 : 0, transition: 'opacity 1s ease',
-        }}>
-          Shariya ✦
-        </div>
-        <button className="wish-button interactive" onClick={handleWishClick} style={{
-          opacity: showFireworks ? 1 : 0, transition: 'opacity 1s ease 0.5s',
-          pointerEvents: showFireworks ? 'auto' : 'none',
-        }}>
-          Make a Wish 🌠
-        </button>
+      {/* Close button */}
+      <button className="wish-close interactive" onClick={onClose}>✕</button>
+
+      <div className="wish-content">
+        <AnimatePresence mode="wait">
+          
+          {step === 'input' && (
+            <motion.div key="input" className="wish-step-input"
+              initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 1.1, opacity: 0 }}
+              transition={{ duration: 0.8 }}>
+              <h2>Close your eyes. What do you wish for?</h2>
+              <form onSubmit={handleWishSubmit}>
+                <input 
+                  type="text" 
+                  value={wish} 
+                  onChange={(e) => setWish(e.target.value)}
+                  placeholder="Type your wish privately here..."
+                  autoFocus
+                  className="interactive"
+                />
+                <button type="submit" className="interactive" disabled={!wish.trim()}>
+                  Whisper to the stars ✨
+                </button>
+              </form>
+            </motion.div>
+          )}
+
+          {step === 'wishing' && (
+            <motion.div key="wishing" className="wish-step-message"
+              initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }}
+              transition={{ duration: 1 }}>
+              <h2>Sending it to the universe...</h2>
+            </motion.div>
+          )}
+
+          {step === 'star' && (
+            <motion.div key="star" className="shooting-star-container"
+              initial={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 1 }}>
+              <motion.div className="shooting-star"
+                initial={{ x: '-10vw', y: '-10vh', scale: 0 }}
+                animate={{ x: '110vw', y: '110vh', scale: 1 }}
+                transition={{ duration: 2, ease: "easeIn" }}
+              />
+            </motion.div>
+          )}
+
+          {step === 'complete' && (
+            <motion.div key="complete" className="wish-step-message"
+              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1.5, delay: 0.5 }}>
+              <h2>A shining star heard you.</h2>
+              <p>May all your dreams outgrow the universe, Shariya.</p>
+              <p className="wish-signature">Happy 20th Birthday 🤍</p>
+            </motion.div>
+          )}
+
+        </AnimatePresence>
       </div>
+    </motion.div>
+  );
+};
 
-      <div ref={shimmerRef} className="shimmer-overlay" style={{
-        background: `
-          radial-gradient(circle at 20% 30%, rgba(255,110,180,0.15) 0%, transparent 50%),
-          radial-gradient(circle at 80% 70%, rgba(255,215,0,0.15) 0%, transparent 50%),
-          radial-gradient(circle at 50% 50%, rgba(232,196,255,0.1) 0%, transparent 60%)
-        `,
-      }} />
-    </section>
+export default memo(function WishesSection() {
+  const [isWished, setIsWished] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  
+  return (
+    <>
+      <section id="wishes" className="section wishes-section">
+        {!showModal && <CSSFireworks />}
+        
+        <div style={{ position: 'relative', zIndex: 2, textAlign: 'center' }}>
+          <h1 className="wishes-title">Happy 20th Birthday</h1>
+          <div className="wishes-subtitle">Shariya ✦</div>
+          
+          <button 
+            className="wish-button interactive" 
+            onClick={() => setShowModal(true)}
+          >
+            {isWished ? 'Make Another Wish 🌠' : 'Make a Wish 🌠'}
+          </button>
+        </div>
+      </section>
+
+      <AnimatePresence>
+        {showModal && (
+          <WishExperience onClose={() => {
+            setShowModal(false);
+            setIsWished(true);
+          }} />
+        )}
+      </AnimatePresence>
+    </>
   );
 });
