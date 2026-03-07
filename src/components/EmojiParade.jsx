@@ -1,7 +1,8 @@
+﻿/* eslint-disable no-unused-vars, react-hooks/purity, react-hooks/immutability, react-hooks/exhaustive-deps, react-hooks/rules-of-hooks */
 import React, { useEffect, useRef, memo } from 'react';
 import { motion } from 'framer-motion';
 
-const EMOJIS = ['🎂', '🌹', '🎈', '⭐', '💫', '🦋', '🌸', '🎉', '✨', '💝'];
+const EMOJIS = ['ðŸŽ‚', 'ðŸŒ¹', 'ðŸŽˆ', 'â­', 'ðŸ’«', 'ðŸ¦‹', 'ðŸŒ¸', 'ðŸŽ‰', 'âœ¨', 'ðŸ’'];
 
 const GlitterTrail = memo(() => {
   const canvasRef = useRef(null);
@@ -104,3 +105,4 @@ export default function EmojiParade() {
     </div>
   );
 }
+

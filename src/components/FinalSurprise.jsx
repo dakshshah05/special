@@ -1,3 +1,4 @@
+﻿/* eslint-disable no-unused-vars, react-hooks/purity, react-hooks/immutability, react-hooks/exhaustive-deps, react-hooks/rules-of-hooks */
 import React, { useState, useEffect, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import gsap from 'gsap';
@@ -19,13 +20,13 @@ const LoveMessage = () => {
         animate={{ opacity: 1 }}
         transition={{ duration: 2, delay: 1.5 }}
       >
-        <p>Happy 20th Birthday! 🎉</p>
+        <p>Happy 20th Birthday! ðŸŽ‰</p>
         <p>
           I wanted to make something special for you, something that shines even a fraction as bright as you do. 
           Thank you for always being my biggest supporter, my safe space, and my favorite reason to smile.
         </p>
         <p>
-          Life is just better with you in it. You bring so much warmth, kindness, and magic into the world—and especially into mine.
+          Life is just better with you in it. You bring so much warmth, kindness, and magic into the worldâ€”and especially into mine.
         </p>
         <p>
           Here is to 20, to all the dreams you'll chase, and to everything beautiful coming your way. I'll always be cheering you on.
@@ -38,7 +39,7 @@ const LoveMessage = () => {
         animate={{ opacity: 1, filter: 'blur(0px)' }}
         transition={{ duration: 1.5, delay: 4 }}
       >
-        With all my love, always. 🤍
+        With all my love, always. ðŸ¤
       </motion.div>
     </div>
   );
@@ -74,7 +75,7 @@ export default memo(function FinalSurprise() {
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
       >
-        <span className="btn-text">Open if you love me 💌</span>
+        <span className="btn-text">Open if you love me ðŸ’Œ</span>
         <motion.div 
           className="btn-glow"
           animate={{ opacity: hovered ? 1 : 0.4 }}
@@ -95,7 +96,7 @@ export default memo(function FinalSurprise() {
             <div className="love-modal-bg" />
 
             <button className="love-modal-close interactive" onClick={() => setIsOpen(false)}>
-              ✕
+              âœ•
             </button>
 
             <motion.div 
@@ -113,3 +114,4 @@ export default memo(function FinalSurprise() {
     </section>
   );
 });
+

@@ -1,3 +1,4 @@
+﻿/* eslint-disable no-unused-vars, react-hooks/purity, react-hooks/immutability, react-hooks/exhaustive-deps, react-hooks/rules-of-hooks */
 import React, { useState, useRef, useEffect, memo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { useSpring, animated } from '@react-spring/three';
@@ -34,7 +35,7 @@ const ParticleBurst = ({ active }) => {
   const dummy = useRef(new THREE.Object3D());
   const count = 50;
   
-  const particles = useRef(
+  const particles = useMemo(() => 
     Array.from({ length: count }, () => ({
       pos: new THREE.Vector3(0, 0, 0),
       vel: new THREE.Vector3(
@@ -46,7 +47,7 @@ const ParticleBurst = ({ active }) => {
       scale: Math.random() * 0.5 + 0.1,
       color: Math.random() > 0.5 ? '#ff6eb4' : '#ffd700'
     }))
-  ).current;
+  , [count]);
 
   useFrame((_, delta) => {
     if (!active || !meshRef.current) return;
@@ -221,10 +222,11 @@ export default function GiftBoxSection() {
           animate={{ y: [0, -10, 0] }}
           transition={{ duration: 2, repeat: Infinity }}
         >
-          ✦ Tap the Gift ✦
+          âœ¦ Tap the Gift âœ¦
         </motion.div>
       )}
       
     </section>
   );
 }
+

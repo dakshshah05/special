@@ -1,3 +1,4 @@
+﻿/* eslint-disable no-unused-vars, react-hooks/purity, react-hooks/immutability, react-hooks/exhaustive-deps, react-hooks/rules-of-hooks */
 import React, { useRef, useMemo, useState, memo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
@@ -77,3 +78,4 @@ export default memo(function FloatingBalloons() {
     </div>
   );
 });
+

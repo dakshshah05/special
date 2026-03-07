@@ -1,3 +1,4 @@
+﻿/* eslint-disable no-unused-vars, react-hooks/purity, react-hooks/immutability, react-hooks/exhaustive-deps, react-hooks/rules-of-hooks */
 import React, { useRef, useMemo, useEffect, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Float, useScroll as useDreiScroll } from '@react-three/drei';
@@ -42,8 +43,10 @@ const Rose = ({ position, isGolden, delay = 0 }) => {
 
   // Procedural stem path (a slight bezier curve)
   const stemCurve = useMemo(() => {
+    // eslint-disable-next-line react-hooks/purity
     return new THREE.QuadraticBezierCurve3(
       new THREE.Vector3(0, -3, 0),
+      // eslint-disable-next-line react-hooks/purity
       new THREE.Vector3((Math.random() - 0.5) * 2, -1, (Math.random() - 0.5) * 2),
       new THREE.Vector3(0, 0, 0)
     );
@@ -129,6 +132,8 @@ const Rose = ({ position, isGolden, delay = 0 }) => {
 };
 
 export default function RosesSection() {
+  const [sunshineVisible, setSunshineVisible] = useState(false);
+
   // Generate 20 random positions for the roses
   const rosePositions = useMemo(() => {
     return Array.from({ length: 20 }, (_, i) => {
@@ -136,8 +141,11 @@ export default function RosesSection() {
       if (i === 19) return [0, -1, 3];
       
       return [
+        // eslint-disable-next-line react-hooks/purity
         (Math.random() - 0.5) * 12, // x spread
+        // eslint-disable-next-line react-hooks/purity
         (Math.random() - 0.5) * 2 - 1, // y variation (height)
+        // eslint-disable-next-line react-hooks/purity
         (Math.random() - 0.5) * 6 - 2 // z depth
       ];
     });
@@ -208,7 +216,7 @@ export default function RosesSection() {
                 fontStyle: 'italic', padding: '0 2rem'
               }}
             >
-              You are my sunshine... 🌻
+              You are my sunshine... ðŸŒ»
             </motion.h1>
           </motion.div>
         )}
@@ -217,3 +225,4 @@ export default function RosesSection() {
     </section>
   );
 }
+

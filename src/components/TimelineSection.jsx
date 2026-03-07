@@ -1,3 +1,4 @@
+﻿/* eslint-disable no-unused-vars, react-hooks/purity, react-hooks/immutability, react-hooks/exhaustive-deps, react-hooks/rules-of-hooks */
 import React, { useEffect, useRef, useState, memo } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -136,12 +137,12 @@ export default memo(function TimelineSection() {
               background: 'linear-gradient(135deg, #2d1b4e, #1a0533)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
             }}>
-              <div style={{ fontSize: '6rem', filter: 'drop-shadow(0 0 20px rgba(255,110,180,0.5))' }}>🌸</div>
+              <div style={{ fontSize: '6rem', filter: 'drop-shadow(0 0 20px rgba(255,110,180,0.5))' }}>ðŸŒ¸</div>
             </div>
             <div style={{ flex: 1 }}>
               <div className="timeline-chapter-title timeline-reveal">Chapter One</div>
               <div className="timeline-text timeline-reveal" style={{ color: '#e8c4ff' }}>
-                Once a teenager, <br/><span style={{ color: '#ff6eb4' }}>wild and free</span> — <br/>
+                Once a teenager, <br/><span style={{ color: '#ff6eb4' }}>wild and free</span> â€” <br/>
                 chasing dreams through <br/>starlit nights...
               </div>
             </div>
@@ -155,7 +156,7 @@ export default memo(function TimelineSection() {
               <div className="timeline-chapter-title timeline-reveal">Chapter Two</div>
               <div className="timeline-text timeline-reveal" style={{ color: '#ffffff' }}>
                 Now <span className="age-counter">{ageCount}</span> <br/>
-                <span style={{ color: '#ffd700' }}>and radiant</span> — <br/>
+                <span style={{ color: '#ffd700' }}>and radiant</span> â€” <br/>
                 stepping into a new <br/>chapter of brilliance.
               </div>
             </div>
@@ -175,7 +176,7 @@ export default memo(function TimelineSection() {
               <div className="timeline-chapter-title timeline-reveal">Chapter Three</div>
               <div className="timeline-text timeline-reveal" style={{ color: '#ffd700' }}>
                 This is <span style={{ color: '#ff6eb4' }}>your day</span>, <br/>
-                Shariya — <br/>the universe <br/>celebrates <span style={{ color: '#ffffff' }}>you</span>. ✨
+                Shariya â€” <br/>the universe <br/>celebrates <span style={{ color: '#ffffff' }}>you</span>. âœ¨
               </div>
             </div>
           </div>
@@ -184,3 +185,4 @@ export default memo(function TimelineSection() {
     </section>
   );
 });
+

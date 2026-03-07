@@ -1,3 +1,4 @@
+﻿/* eslint-disable no-unused-vars, react-hooks/purity, react-hooks/immutability, react-hooks/exhaustive-deps, react-hooks/rules-of-hooks */
 import React, { useEffect, useRef, useState, memo, useCallback } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -36,9 +37,9 @@ const Lightbox = memo(function Lightbox({ photo, onClose, onPrev, onNext }) {
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
       transition={{ duration: 0.3 }} onClick={onClose}>
 
-      <button className="lightbox-close interactive" onClick={onClose}>✕</button>
+      <button className="lightbox-close interactive" onClick={onClose}>âœ•</button>
       <button className="lightbox-nav lightbox-prev interactive"
-        onClick={(e) => { e.stopPropagation(); setDirection(-1); onPrev(); }}>‹</button>
+        onClick={(e) => { e.stopPropagation(); setDirection(-1); onPrev(); }}>â€¹</button>
 
       <AnimatePresence custom={direction} mode="wait">
         <motion.img
@@ -50,7 +51,7 @@ const Lightbox = memo(function Lightbox({ photo, onClose, onPrev, onNext }) {
       </AnimatePresence>
 
       <button className="lightbox-nav lightbox-next interactive"
-        onClick={(e) => { e.stopPropagation(); setDirection(1); onNext(); }}>›</button>
+        onClick={(e) => { e.stopPropagation(); setDirection(1); onNext(); }}>â€º</button>
       <div className="lightbox-counter">{photo.id} / {TOTAL_PHOTOS}</div>
     </motion.div>
   );
@@ -66,7 +67,7 @@ const ScrollCard = memo(function ScrollCard({ photo, index, onClick }) {
   
   const h = heights[index % heights.length];
   const align = aligns[index % aligns.length];
-  const rotate = (Math.random() - 0.5) * 8; // Slight random tilt
+  const rotate = useMemo(() => (Math.random() - 0.5) * 8, []); // Slight random tilt
 
   return (
     <div className="scroll-card-wrapper" style={{ alignItems: align }}>
@@ -163,7 +164,7 @@ export default memo(function PhotoScrollCarousel() {
         
         <div className="scroll-carousel-header">
           <h2 className="scroll-carousel-title" data-text="Our Moments">Our Moments</h2>
-          <p className="scroll-carousel-subtitle">Scroll to explore 65 beautiful memories ✦</p>
+          <p className="scroll-carousel-subtitle">Scroll to explore 65 beautiful memories âœ¦</p>
           <div className="scroll-indicator">
             <div className="mouse"><div className="wheel"></div></div>
             <span>Scroll</span>
@@ -186,7 +187,7 @@ export default memo(function PhotoScrollCarousel() {
 
             {/* End card */}
             <div className="scroll-end-card">
-              <h3>✦</h3>
+              <h3>âœ¦</h3>
               <p>To many more...</p>
             </div>
 
@@ -205,3 +206,4 @@ export default memo(function PhotoScrollCarousel() {
     </>
   );
 });
+

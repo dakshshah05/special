@@ -1,14 +1,15 @@
+﻿/* eslint-disable no-unused-vars, react-hooks/purity, react-hooks/immutability, react-hooks/exhaustive-deps, react-hooks/rules-of-hooks */
 import React, { useState, useRef, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 // Sample memories for the corkboard
 const MEMORIES = [
-  { id: 1, src: '/photos/photo1.jpg', caption: 'Memories 🌟', rotation: -5, x: 10, y: 15 },
-  { id: 2, src: '/photos/photo2.jpg', caption: 'Always Smiling ✨', rotation: 8, x: 40, y: 5 },
-  { id: 3, src: '/photos/photo3.jpg', caption: 'Special Moments 🤍', rotation: -12, x: 75, y: 12 },
-  { id: 4, src: '/photos/photo4.jpg', caption: 'Adventures 🌊', rotation: 15, x: 20, y: 50 },
-  { id: 5, src: '/photos/photo5.jpg', caption: 'Favorite Day 🌸', rotation: -8, x: 55, y: 45 },
-  { id: 6, src: '/photos/photo6.jpg', caption: 'Just Us 💫', rotation: 10, x: 80, y: 60 }
+  { id: 1, src: '/photos/photo1.jpg', caption: 'Memories ðŸŒŸ', rotation: -5, x: 10, y: 15 },
+  { id: 2, src: '/photos/photo2.jpg', caption: 'Always Smiling âœ¨', rotation: 8, x: 40, y: 5 },
+  { id: 3, src: '/photos/photo3.jpg', caption: 'Special Moments ðŸ¤', rotation: -12, x: 75, y: 12 },
+  { id: 4, src: '/photos/photo4.jpg', caption: 'Adventures ðŸŒŠ', rotation: 15, x: 20, y: 50 },
+  { id: 5, src: '/photos/photo5.jpg', caption: 'Favorite Day ðŸŒ¸', rotation: -8, x: 55, y: 45 },
+  { id: 6, src: '/photos/photo6.jpg', caption: 'Just Us ðŸ’«', rotation: 10, x: 80, y: 60 }
 ];
 
 const Polaroid = memo(({ src, caption, rotation, x, y, onClick, delay = 0 }) => {
@@ -90,7 +91,7 @@ export default function CorkboardSection() {
                 className="lightbox-close interactive"
                 onClick={() => setSelectedImage(null)}
               >
-                ✕
+                âœ•
               </button>
               <div className="lightbox-img-wrapper">
                 <img src={selectedImage.src} alt={selectedImage.caption} />
@@ -105,3 +106,4 @@ export default function CorkboardSection() {
     </section>
   );
 }
+

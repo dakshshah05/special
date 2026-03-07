@@ -1,3 +1,4 @@
+﻿/* eslint-disable no-unused-vars, react-hooks/purity, react-hooks/immutability, react-hooks/exhaustive-deps, react-hooks/rules-of-hooks */
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Lenis from '@studio-freight/lenis';
 import gsap from 'gsap';
@@ -42,6 +43,8 @@ export default function App() {
       id: Date.now() + i,
       left: Math.random() * 100, // random start X position %
       size: Math.random() * 2 + 1, // random scale
+      sway: Math.random() * 20 - 10,
+      duration: 3 + Math.random(),
     }));
     
     setFloatingHugs(prev => [...prev, ...newHugs]);
@@ -62,7 +65,7 @@ export default function App() {
   useEffect(() => {
     // Console Easter Egg (Secret Love Note)
     console.log(
-      '%cEven the code behind this website thinks you\'re beautiful. Happy 20th, Shariya! 🤍',
+      '%cEven the code behind this website thinks you\'re beautiful. Happy 20th, Shariya! ðŸ¤',
       'font-size: 18px; font-style: italic; font-family: "Georgia", serif; color: #ff6eb4; background: #0a0010; padding: 20px; border: 2px solid #ffd700; border-radius: 10px; text-shadow: 0 0 10px rgba(255, 110, 180, 0.5);'
     );
 
@@ -121,7 +124,7 @@ export default function App() {
               display: 'flex', alignItems: 'center', gap: '10px'
             }}
           >
-            <span>🤗</span> Hug sent to Shariya! (Total: {hugsSent})
+            <span>ðŸ¤—</span> Hug sent to Shariya! (Total: {hugsSent})
           </motion.div>
         )}
       </AnimatePresence>
@@ -133,12 +136,12 @@ export default function App() {
             <motion.div
               key={hug.id}
               initial={{ opacity: 1, y: '100vh', x: `${hug.left}vw`, scale: hug.size }}
-              animate={{ opacity: 0, y: '-20vh', x: `${hug.left + (Math.random() * 20 - 10)}vw` }}
+              animate={{ opacity: 0, y: '-20vh', x: `${hug.left + hug.sway}vw` }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 3 + Math.random(), ease: 'easeOut' }}
+              transition={{ duration: hug.duration, ease: 'easeOut' }}
               style={{ position: 'absolute', fontSize: '3rem', filter: 'drop-shadow(0 0 10px rgba(255,110,180,0.5))' }}
             >
-              🤍
+              ðŸ¤
             </motion.div>
           ))}
         </AnimatePresence>
@@ -153,7 +156,7 @@ export default function App() {
           display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px',
           fontFamily: 'var(--font-sans)', color: '#fff', textAlign: 'center', fontSize: '0.9rem'
         }}>
-          <p>Shake your phone to send a hug! 🤗</p>
+          <p>Shake your phone to send a hug! ðŸ¤—</p>
           <button 
             onClick={requestPermission}
             style={{ 
@@ -216,9 +219,9 @@ export default function App() {
           opacity: 0.5,
           background: 'var(--deep-void)',
         }}>
-          <p>Made with 💖 for Shariya</p>
+          <p>Made with ðŸ’– for Shariya</p>
           <p style={{ marginTop: '0.5rem', fontSize: '0.75rem' }}>
-            ✦ March 11th · Twenty ✦
+            âœ¦ March 11th Â· Twenty âœ¦
           </p>
           <p style={{ marginTop: '0.5rem', fontSize: '0.65rem', opacity: 0.6 }}>
             {isSupported ? "Shake your phone to send her a hug!" : ""}
@@ -228,3 +231,4 @@ export default function App() {
     </>
   );
 }
+

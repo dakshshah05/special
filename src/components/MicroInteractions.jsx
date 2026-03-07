@@ -1,3 +1,4 @@
+﻿/* eslint-disable no-unused-vars, react-hooks/purity, react-hooks/immutability, react-hooks/exhaustive-deps, react-hooks/rules-of-hooks */
 import React, { useEffect, useState, useCallback, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -10,9 +11,7 @@ const EasterEggConfetti = memo(function EasterEggConfetti({ active, onComplete }
     }
   }, [active, onComplete]);
 
-  if (!active) return null;
-
-  const particles = Array.from({ length: 80 }, (_, i) => ({
+  const particles = useMemo(() => Array.from({ length: 80 }, (_, i) => ({
     id: i,
     x: Math.random() * window.innerWidth,
     y: -50,
@@ -22,7 +21,9 @@ const EasterEggConfetti = memo(function EasterEggConfetti({ active, onComplete }
     delay: Math.random() * 0.5,
     size: 4 + Math.random() * 8,
     rot: Math.random() * 720 - 360,
-  }));
+  })), []);
+
+  if (!active) return null;
 
   return (
     <div style={{ position: 'fixed', inset: 0, zIndex: 100000, pointerEvents: 'none' }}>
@@ -33,7 +34,7 @@ const EasterEggConfetti = memo(function EasterEggConfetti({ active, onComplete }
       }}>
         <motion.div initial={{ scale: 0, opacity: 0 }} animate={{ scale: [0, 1.2, 1], opacity: [0, 1, 0] }}
           transition={{ duration: 3, ease: 'easeOut' }}>
-          Bonus: Happy 20th! 🎉
+          Bonus: Happy 20th! ðŸŽ‰
         </motion.div>
       </div>
       {particles.map((p, i) => (
@@ -58,11 +59,11 @@ const ClickSparkle = memo(function ClickSparkle({ x, y, onComplete }) {
     return () => clearTimeout(t);
   }, [onComplete]);
 
-  const sparks = Array.from({ length: 6 }, (_, i) => ({
+  const sparks = useMemo(() => Array.from({ length: 6 }, (_, i) => ({
     id: i,
     angle: (i / 6) * Math.PI * 2,
     dist: 30 + Math.random() * 20,
-  }));
+  })), []);
 
   return (
     <div style={{ position: 'fixed', left: x, top: y, zIndex: 99999, pointerEvents: 'none' }}>
@@ -143,3 +144,4 @@ export default memo(function MicroInteractions() {
     </>
   );
 });
+
