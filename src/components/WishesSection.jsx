@@ -1,5 +1,4 @@
-﻿/* eslint-disable no-unused-vars, react-hooks/purity, react-hooks/immutability, react-hooks/exhaustive-deps, react-hooks/rules-of-hooks */
-import React, { useEffect, useRef, useState, memo } from 'react';
+﻿import React, { useEffect, useRef, useState, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import gsap from 'gsap';
 
@@ -57,7 +56,7 @@ const WishExperience = ({ onClose }) => {
       <div className="wish-sky" />
 
       {/* Close button */}
-      <button className="wish-close interactive" onClick={onClose}>âœ•</button>
+      <button className="wish-close interactive" onClick={onClose}>X</button>
 
       <div className="wish-content">
         <AnimatePresence mode="wait">
@@ -77,7 +76,7 @@ const WishExperience = ({ onClose }) => {
                   className="interactive"
                 />
                 <button type="submit" className="interactive" disabled={!wish.trim()}>
-                  Whisper to the stars âœ¨
+                  Whisper to the stars
                 </button>
               </form>
             </motion.div>
@@ -108,7 +107,7 @@ const WishExperience = ({ onClose }) => {
               transition={{ duration: 1.5, delay: 0.5 }}>
               <h2>A shining star heard you.</h2>
               <p>May all your dreams outgrow the universe, Shariya.</p>
-              <p className="wish-signature">Happy 20th Birthday ðŸ¤</p>
+              <p className="wish-signature">Forward Always</p>
             </motion.div>
           )}
 
@@ -129,13 +128,13 @@ export default memo(function WishesSection() {
         
         <div style={{ position: 'relative', zIndex: 2, textAlign: 'center' }}>
           <h1 className="wishes-title">Happy 20th Birthday</h1>
-          <div className="wishes-subtitle">Shariya âœ¦</div>
+          <div className="wishes-subtitle">Shariya</div>
           
           <button 
             className="wish-button interactive" 
             onClick={() => setShowModal(true)}
           >
-            {isWished ? 'Make Another Wish ðŸŒ ' : 'Make a Wish ðŸŒ '}
+            {isWished ? 'Make Another Wish' : 'Make a Wish'}
           </button>
         </div>
       </section>
@@ -151,4 +150,3 @@ export default memo(function WishesSection() {
     </>
   );
 });
-

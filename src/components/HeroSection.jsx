@@ -1,6 +1,6 @@
-﻿import React, { useRef, useEffect, useState, useMemo, memo } from 'react';
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { Float, Line } from '@react-three/drei';
+﻿import React, { useRef, useEffect, useMemo, memo } from 'react';
+import { Canvas, useFrame } from '@react-three/fiber';
+import { Float } from '@react-three/drei';
 import * as THREE from 'three';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -121,96 +121,6 @@ const RosePetals = memo(function RosePetals({ count = 15 }) {
   );
 });
 
-// Interactive Constellation (S shape for Shariya)
-const InteractiveConstellation = memo(function InteractiveConstellation() {
-  const [activePoints, setActivePoints] = useState([]);
-  const [isPointerDown, setIsPointerDown] = useState(false);
-  const groupRef = useRef();
-
-  // Define points for an elegant "S" shape, slightly larger and centered
-  const sPoints = useMemo(() => [
-    new THREE.Vector3(1.5, 2.5, 0),
-    new THREE.Vector3(0, 3, 0),
-    new THREE.Vector3(-1.5, 2.5, 0),
-    new THREE.Vector3(-2, 1, 0),
-    new THREE.Vector3(-1, -0.5, 0),
-    new THREE.Vector3(1, -1.5, 0),
-    new THREE.Vector3(2, -3, 0),
-    new THREE.Vector3(1.5, -4.5, 0),
-    new THREE.Vector3(0, -5, 0),
-    new THREE.Vector3(-1.5, -4.5, 0),
-  ].map(p => p.multiplyScalar(1.2)), []); // Scale up the whole shape by 20%
-
-  // Subtle breathing animation for the un-clicked stars to draw attention
-  useFrame(({ clock }) => {
-    if (groupRef.current && activePoints.length === 0) {
-      const scale = 1 + Math.sin(clock.getElapsedTime() * 2) * 0.15;
-      groupRef.current.scale.setScalar(scale);
-    } else if (groupRef.current) {
-        groupRef.current.scale.setScalar(1); // Reset scale when interacting
-    }
-  });
-
-  return (
-    <group 
-      ref={groupRef}
-      onPointerDown={() => setIsPointerDown(true)} 
-      onPointerUp={() => setIsPointerDown(false)}
-      onPointerLeave={() => setIsPointerDown(false)}
-      position={[0, 0, -2]} // Move slightly forward
-    >
-      {/* Render the stars in the shape */}
-      {sPoints.map((pos, i) => {
-        const isActive = activePoints.includes(i);
-        return (
-          <mesh 
-            key={i} 
-            position={pos}
-            onPointerOver={() => {
-              if (isPointerDown && !isActive) {
-                setActivePoints(prev => [...prev, i]);
-              }
-            }}
-            onPointerDown={(e) => {
-              e.stopPropagation();
-              setIsPointerDown(true);
-              if (!isActive) setActivePoints(prev => [...prev, i]);
-            }}
-          >
-            {/* The visible star - Made LARGER and brighter */}
-            <sphereGeometry args={[isActive ? 0.25 : 0.15, 16, 16]} />
-            <meshBasicMaterial color={isActive ? "#ffd700" : "#ffffff"} />
-            
-            {/* Invisible HIT AREA - Made MASSIVE for easy dragging */}
-            <mesh>
-              <sphereGeometry args={[1.5, 8, 8]} />
-              <meshBasicMaterial visible={false} />
-            </mesh>
-            
-            {/* Glow effect */}
-            {isActive ? (
-              <pointLight distance={5} intensity={2} color="#ffd700" />
-            ) : (
-              <pointLight distance={2} intensity={0.5} color="#ffffff" />
-            )}
-          </mesh>
-        );
-      })}
-
-      {/* Draw the connecting lines */}
-      {activePoints.length > 1 && (
-        <Line
-          points={activePoints.map(i => sPoints[i])}
-          color="#ff6eb4"
-          lineWidth={5}
-          transparent
-          opacity={0.9}
-        />
-      )}
-    </group>
-  );
-});
-
 // Simple 3D elements instead of text geometry
 const HeroElements = memo(function HeroElements() {
   const groupRef = useRef();
@@ -266,19 +176,17 @@ export default function HeroSection() {
 
   return (
     <section id="hero" ref={sectionRef} className="section" style={{ position: 'relative' }}>
-      <div style={{ position: 'absolute', inset: 0, zIndex: 1, pointerEvents: 'auto' }}>
+      <div style={{ position: 'absolute', inset: 0, zIndex: 1 }}>
         <Canvas
           camera={{ position: [0, 0, 8], fov: 60 }}
           gl={{ antialias: false, alpha: true, powerPreference: 'high-performance' }}
           dpr={[1, 1.5]}
           performance={{ min: 0.5 }}
           style={{ background: 'transparent' }}
-          raycaster={{ computeOffsets: (e) => ({ offsetX: e.clientX, offsetY: e.clientY }) }}
         >
           <StarField count={2000} />
           <RosePetals count={15} />
           <HeroElements />
-          <InteractiveConstellation />
         </Canvas>
       </div>
 
@@ -301,18 +209,11 @@ export default function HeroSection() {
           Shariya
         </div>
         <div ref={subtitleRef} className="hero-subtitle"
-          style={{ opacity: 0, transform: 'translateY(20px)', textAlign: 'center' }}>
+          style={{ opacity: 0, transform: 'translateY(20px)' }}>
           ✦ Turning 20 · March 11th ✦
-          <div style={{
-            marginTop: '2rem', fontSize: '0.9rem', opacity: 0.7, 
-            letterSpacing: '0.3em', textTransform: 'uppercase',
-            animation: 'pulse 2s infinite ease-in-out'
-          }}>
-            ✧ Connect the stars ✧
-          </div>
         </div>
       </div>
-      <div className="hero-overlay" style={{ pointerEvents: 'none' }} />
+      <div className="hero-overlay" />
     </section>
   );
 }

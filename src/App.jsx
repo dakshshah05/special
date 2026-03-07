@@ -13,8 +13,6 @@ import PhotoCarousel from './components/PhotoCarousel';
 import MessageSection from './components/MessageSection';
 import CakeSection from './components/CakeSection';
 import WishesSection from './components/WishesSection';
-import MicroInteractions from './components/MicroInteractions';
-import FinalSurprise from './components/FinalSurprise';
 
 gsap.registerPlugin(ScrollTrigger, TextPlugin);
 
@@ -24,12 +22,6 @@ export default function App() {
 
   // Initialize Lenis smooth scroll
   useEffect(() => {
-    // Console Easter Egg (Secret Love Note)
-    console.log(
-      '%cEven the code behind this website thinks you\'re beautiful. Happy 20th, Shariya! 🤍',
-      'font-size: 18px; font-style: italic; font-family: "Georgia", serif; color: #ff6eb4; background: #0a0010; padding: 20px; border: 2px solid #ffd700; border-radius: 10px; text-shadow: 0 0 10px rgba(255, 110, 180, 0.5);'
-    );
-
     const lenis = new Lenis({
       lerp: 0.08,
       duration: 1.4,
@@ -65,7 +57,6 @@ export default function App() {
   return (
     <>
       <CustomCursor />
-      <MicroInteractions />
       <Navigation />
 
       <Loader onComplete={() => setLoaded(true)} />
@@ -91,9 +82,6 @@ export default function App() {
 
         {/* Final Wishes + Fireworks */}
         <WishesSection />
-
-        {/* The Final 'Open if you love me' Letter */}
-        <FinalSurprise />
 
         {/* Footer */}
         <footer style={{
