@@ -36,7 +36,7 @@ const EasterEggConfetti = memo(function EasterEggConfetti({ active, onComplete }
           Bonus: Happy 20th! 🎉
         </motion.div>
       </div>
-      {particles.map(p => (
+      {particles.map((p, i) => (
         <motion.div key={p.id}
           style={{
             position: 'absolute', left: p.x, top: p.y, width: p.size, height: p.size,
