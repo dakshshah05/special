@@ -1,11 +1,10 @@
-﻿import React, { useRef, useState, useMemo, memo, useCallback } from 'react';
+﻿import React, { useRef, useState, useMemo, memo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
 import { useReveal } from '../hooks/useReveal';
-import { motion, AnimatePresence } from 'framer-motion';
 
-// Simple flame glow
+// Simple flame glow (no shader)
 const Flame = memo(function Flame({ position, isLit }) {
   const ref = useRef();
   useFrame(({ clock }) => {
@@ -57,39 +56,20 @@ const FrostingDots = memo(function FrostingDots({ radius, y, count = 10, color =
   );
 });
 
-const BirthdayCake = memo(function BirthdayCake({ onBlow, onEat }) {
+const BirthdayCake = memo(function BirthdayCake({ onBlow }) {
   const [candlesLit, setCandlesLit] = useState(true);
-  const groupRef = useRef();
 
   const handleClick = () => {
     if (candlesLit) {
       setCandlesLit(false);
       setTimeout(() => { if (onBlow) onBlow(); }, 1000);
-    } else {
-      // Cake bounce animation
-      if (groupRef.current) {
-        let t = 0;
-        const bounce = setInterval(() => {
-          t += 0.1;
-          const scale = 1 - Math.sin(t * Math.PI) * 0.1;
-          const y = Math.sin(t * Math.PI) * 0.1;
-          groupRef.current.scale.set(1, scale, 1);
-          groupRef.current.position.y = y;
-          if (t >= 1) {
-            clearInterval(bounce);
-            groupRef.current.scale.set(1, 1, 1);
-            groupRef.current.position.y = 0;
-          }
-        }, 16);
-      }
-      if (onEat) onEat();
     }
   };
 
   const candlePositions = [[0, 1.55, 0], [0.25, 1.55, 0.1], [-0.25, 1.55, -0.1], [0.1, 1.55, -0.2], [-0.1, 1.55, 0.2]];
 
   return (
-    <group ref={groupRef} onClick={handleClick}>
+    <group onClick={handleClick}>
       {/* Layer 1 */}
       <mesh position={[0, 0, 0]}>
         <cylinderGeometry args={[1.1, 1.1, 0.55, 20]} />
@@ -123,24 +103,10 @@ const BirthdayCake = memo(function BirthdayCake({ onBlow, onEat }) {
 export default memo(function CakeSection() {
   const sectionRef = useReveal({ y: 40 });
   const [blownOut, setBlownOut] = useState(false);
-  const [slices, setSlices] = useState([]);
-  const [sliceCount, setSliceCount] = useState(0);
-
-  const handleEat = useCallback(() => {
-    setSliceCount(c => c + 1);
-    const newSlice = {
-      id: Date.now(),
-      x: 30 + Math.random() * 40, // percentage 30-70%
-      y: 30 + Math.random() * 30,
-      rot: (Math.random() - 0.5) * 30
-    };
-    setSlices(prev => [...prev.slice(-4), newSlice]);
-  }, []);
 
   return (
     <section id="cake" ref={sectionRef} className="section cake-section" style={{
       display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-      position: 'relative'
     }}>
       <h2 style={{
         fontFamily: 'var(--font-serif)', fontSize: 'clamp(2rem, 4vw, 3rem)',
@@ -149,7 +115,7 @@ export default memo(function CakeSection() {
       }}>
         Make a Wish ✦
       </h2>
-      <div className="cake-canvas interactive" style={{ maxWidth: '800px', margin: '0 auto', position: 'relative' }}>
+      <div className="cake-canvas" style={{ maxWidth: '800px', margin: '0 auto' }}>
         <Canvas
           camera={{ position: [3, 3, 3], fov: 40 }}
           gl={{ antialias: false, powerPreference: 'high-performance' }}
@@ -157,38 +123,14 @@ export default memo(function CakeSection() {
         >
           <ambientLight intensity={0.5} />
           <directionalLight position={[5, 8, 3]} intensity={0.5} />
-          <BirthdayCake onBlow={() => setBlownOut(true)} onEat={handleEat} />
+          <BirthdayCake onBlow={() => setBlownOut(true)} />
           <OrbitControls enableZoom={false} enablePan={false}
             minPolarAngle={Math.PI / 6} maxPolarAngle={Math.PI / 2.2}
             autoRotate autoRotateSpeed={0.5} />
         </Canvas>
-
-        {/* Floating slice easter eggs */}
-        <AnimatePresence>
-          {slices.map(s => (
-            <motion.div key={s.id}
-              style={{
-                position: 'absolute', left: `${s.x}%`, top: `${s.y}%`,
-                fontFamily: 'var(--font-serif)', fontSize: '2rem',
-                color: 'var(--starlight-gold)', fontWeight: 'bold',
-                pointerEvents: 'none', zIndex: 10,
-                textShadow: '0 0 10px rgba(255,215,0,0.5)'
-              }}
-              initial={{ opacity: 1, y: 0, scale: 0.5, rotate: s.rot }}
-              animate={{ opacity: 0, y: -100, scale: 1.2, rotate: s.rot + 10 }}
-              transition={{ duration: 1.5, ease: 'easeOut' }}
-              onAnimationComplete={() => setSlices(prev => prev.filter(x => x.id !== s.id))}
-            >
-              +1 Slice 🍰
-            </motion.div>
-          ))}
-        </AnimatePresence>
       </div>
-
-      <p className="blow-text" style={{ transition: 'opacity 0.5s' }}>
-        {!blownOut && '✨ Click the cake to blow out the candles ✨'}
-        {blownOut && sliceCount === 0 && '🎉 Wish granted! Click the cake to grab a slice!'}
-        {blownOut && sliceCount > 0 && `You've eaten ${sliceCount} slice${sliceCount > 1 ? 's' : ''} 🍰`}
+      <p className="blow-text" style={{ opacity: blownOut ? 0 : 0.7, transition: 'opacity 0.5s' }}>
+        {blownOut ? '🎉 Wish granted!' : '✨ Click the cake to blow out the candles ✨'}
       </p>
     </section>
   );
