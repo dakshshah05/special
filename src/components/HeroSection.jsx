@@ -125,9 +125,9 @@ const RosePetals = memo(function RosePetals({ count = 15 }) {
 const InteractiveConstellation = memo(function InteractiveConstellation() {
   const [activePoints, setActivePoints] = useState([]);
   const [isPointerDown, setIsPointerDown] = useState(false);
-  const { viewport } = useThree();
+  const groupRef = useRef();
 
-  // Define points for an elegant "S" shape
+  // Define points for an elegant "S" shape, slightly larger and centered
   const sPoints = useMemo(() => [
     new THREE.Vector3(1.5, 2.5, 0),
     new THREE.Vector3(0, 3, 0),
@@ -139,14 +139,25 @@ const InteractiveConstellation = memo(function InteractiveConstellation() {
     new THREE.Vector3(1.5, -4.5, 0),
     new THREE.Vector3(0, -5, 0),
     new THREE.Vector3(-1.5, -4.5, 0),
-  ], []);
+  ].map(p => p.multiplyScalar(1.2)), []); // Scale up the whole shape by 20%
 
-  // Use a slightly larger invisible hit area for each star
+  // Subtle breathing animation for the un-clicked stars to draw attention
+  useFrame(({ clock }) => {
+    if (groupRef.current && activePoints.length === 0) {
+      const scale = 1 + Math.sin(clock.getElapsedTime() * 2) * 0.15;
+      groupRef.current.scale.setScalar(scale);
+    } else if (groupRef.current) {
+        groupRef.current.scale.setScalar(1); // Reset scale when interacting
+    }
+  });
+
   return (
     <group 
+      ref={groupRef}
       onPointerDown={() => setIsPointerDown(true)} 
       onPointerUp={() => setIsPointerDown(false)}
       onPointerLeave={() => setIsPointerDown(false)}
+      position={[0, 0, -2]} // Move slightly forward
     >
       {/* Render the stars in the shape */}
       {sPoints.map((pos, i) => {
@@ -160,17 +171,27 @@ const InteractiveConstellation = memo(function InteractiveConstellation() {
                 setActivePoints(prev => [...prev, i]);
               }
             }}
+            onPointerDown={(e) => {
+              e.stopPropagation();
+              setIsPointerDown(true);
+              if (!isActive) setActivePoints(prev => [...prev, i]);
+            }}
           >
-            {/* The visible star */}
-            <sphereGeometry args={[isActive ? 0.15 : 0.08, 16, 16]} />
+            {/* The visible star - Made LARGER and brighter */}
+            <sphereGeometry args={[isActive ? 0.25 : 0.15, 16, 16]} />
             <meshBasicMaterial color={isActive ? "#ffd700" : "#ffffff"} />
-            {/* Invisible larger hit area for easier dragging */}
+            
+            {/* Invisible HIT AREA - Made MASSIVE for easy dragging */}
             <mesh>
-              <sphereGeometry args={[0.8, 8, 8]} />
+              <sphereGeometry args={[1.5, 8, 8]} />
               <meshBasicMaterial visible={false} />
             </mesh>
-            {isActive && (
-              <pointLight distance={3} intensity={1} color="#ffd700" />
+            
+            {/* Glow effect */}
+            {isActive ? (
+              <pointLight distance={5} intensity={2} color="#ffd700" />
+            ) : (
+              <pointLight distance={2} intensity={0.5} color="#ffffff" />
             )}
           </mesh>
         );
@@ -181,9 +202,9 @@ const InteractiveConstellation = memo(function InteractiveConstellation() {
         <Line
           points={activePoints.map(i => sPoints[i])}
           color="#ff6eb4"
-          lineWidth={3}
+          lineWidth={5}
           transparent
-          opacity={0.8}
+          opacity={0.9}
         />
       )}
     </group>
@@ -280,8 +301,15 @@ export default function HeroSection() {
           Shariya
         </div>
         <div ref={subtitleRef} className="hero-subtitle"
-          style={{ opacity: 0, transform: 'translateY(20px)' }}>
+          style={{ opacity: 0, transform: 'translateY(20px)', textAlign: 'center' }}>
           ✦ Turning 20 · March 11th ✦
+          <div style={{
+            marginTop: '2rem', fontSize: '0.9rem', opacity: 0.7, 
+            letterSpacing: '0.3em', textTransform: 'uppercase',
+            animation: 'pulse 2s infinite ease-in-out'
+          }}>
+            ✧ Connect the stars ✧
+          </div>
         </div>
       </div>
       <div className="hero-overlay" style={{ pointerEvents: 'none' }} />
