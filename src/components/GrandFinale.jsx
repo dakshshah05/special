@@ -11,7 +11,8 @@ export default function GrandFinale() {
       const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
       const scrolled = (winScroll / height) * 100;
 
-      if (scrolled >= 100 && !active) {
+      // Only trigger if we aren't already active and we've reached 99.5%
+      if (scrolled >= 99.5 && !active) {
           triggerFinale();
       }
     };
@@ -30,6 +31,21 @@ export default function GrandFinale() {
       .from('.finale-face-container', { scale: 0, rotation: 360, opacity: 0, duration: 2, ease: 'elastic.out(1, 0.3)' }, '-=0.5')
       .from('.finale-text', { y: 100, opacity: 0, stagger: 0.5, duration: 1, ease: 'power3.out' }, '-=1')
       .to('.finale-confetti', { opacity: 1, duration: 1 });
+  };
+
+  const closeFinale = () => {
+    // Fades out and then scrolls back up slightly so it doesn't immediately re-trigger
+    gsap.to(finaleRef.current, { 
+      opacity: 0, 
+      pointerEvents: 'none', 
+      duration: 0.5,
+      onComplete: () => {
+        setActive(false);
+        // Using window.scrollTo since we're using smooth-scroll usually but let's just jump or small move
+        // Actually, let's jump to the "Hero" or "Memories" section
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    });
   };
 
   return (
@@ -80,13 +96,14 @@ export default function GrandFinale() {
             fontSize: '1.2rem', 
             color: 'white', 
             opacity: 0.7,
-            letterSpacing: '0.5em'
+            letterSpacing: '0.5em',
+            textAlign: 'center'
         }}>
             HAPPY BIRTHDAY
         </div>
 
         <button 
-            onClick={() => setActive(false)} 
+            onClick={closeFinale}
             style={{ 
                 marginTop: '4rem', 
                 background: 'none', 
@@ -94,7 +111,18 @@ export default function GrandFinale() {
                 color: 'white', 
                 padding: '10px 30px', 
                 borderRadius: '50px',
-                cursor: 'pointer'
+                cursor: 'pointer',
+                fontFamily: 'var(--font-sans)',
+                letterSpacing: '0.1em',
+                transition: 'all 0.3s ease'
+            }}
+            onMouseOver={(e) => {
+              e.target.style.background = 'white';
+              e.target.style.color = 'black';
+            }}
+            onMouseOut={(e) => {
+              e.target.style.background = 'none';
+              e.target.style.color = 'white';
             }}
         >
             Back to Memories
