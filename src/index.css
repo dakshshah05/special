@@ -230,7 +230,7 @@ body {
   font-family: var(--font-sans);
   overflow-x: hidden;
   background: var(--deep-void);
-  cursor: none;
+  cursor: auto; /* Temporarily restore cursor for visibility */
 }
 
 ::selection {

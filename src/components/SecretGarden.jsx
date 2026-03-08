@@ -33,8 +33,7 @@ function Island() {
       <Text
         position={[0, 2, 0]}
         fontSize={1}
-        color="var(--rose-pink)"
-        font="/fonts/cormorant.json"
+        color="#ff6eb4"
         anchorX="center"
         anchorY="middle"
       >
