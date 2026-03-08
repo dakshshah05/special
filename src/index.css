@@ -248,73 +248,104 @@ a {
   background-clip: text;
 }
 
-/* Photo Carousel */
-.carousel-container {
-  perspective: 1200px;
-  width: 100%;
-  height: 100%;
+/* Photo Carousel (Horizontal Smooth) */
+.carousel-horizontal-section {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
   display: flex;
-  align-items: center;
+  flex-direction: column;
   justify-content: center;
 }
 
-.carousel-track {
-  position: relative;
-  width: 300px;
-  height: 400px;
-  transform-style: preserve-3d;
-}
-
-.carousel-card {
+.carousel-header {
   position: absolute;
-  width: 300px;
-  height: 400px;
-  border-radius: 16px;
-  overflow: hidden;
-  backface-visibility: hidden;
-  transition: box-shadow 0.4s ease;
-  cursor: pointer;
-}
-
-.carousel-card.active {
-  box-shadow:
-    0 0 40px rgba(255, 110, 180, 0.4),
-    0 0 80px rgba(255, 110, 180, 0.1);
-}
-
-.carousel-card-inner {
-  width: 100%;
-  height: 100%;
-  border-radius: 16px;
-  overflow: hidden;
-}
-
-.carousel-nav-btn {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  border: 1px solid var(--rose-pink);
-  background: rgba(255, 110, 180, 0.2);
-  color: var(--rose-pink);
-  font-size: 1.5rem;
-  cursor: pointer;
+  top: 10vh;
+  left: 5vw;
   z-index: 10;
-  transition: all 0.3s ease;
 }
 
-.carousel-nav-btn:hover {
-  background: rgba(255, 110, 180, 0.3);
-  box-shadow: 0 0 20px rgba(255, 110, 180, 0.3);
+.carousel-title {
+  font-family: var(--font-serif);
+  font-size: clamp(2rem, 5vw, 4rem);
+  color: var(--rose-pink);
+  margin-bottom: 0.5rem;
 }
 
-.carousel-nav-btn.prev {
-  left: -80px;
+.carousel-subtitle {
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--lavender-glow);
+  opacity: 0.7;
 }
-.carousel-nav-btn.next {
-  right: -80px;
+
+.carousel-horizontal-track {
+  display: flex;
+  align-items: center;
+  gap: 3vw;
+  padding: 0 5vw;
+  height: 60vh;
+  will-change: transform;
+}
+
+.carousel-image-wrapper {
+  position: relative;
+  height: 100%;
+  flex-shrink: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+  background: var(--midnight-purple);
+}
+
+.carousel-image-wrapper img {
+  height: 100%;
+  width: auto;
+  object-fit: contain;
+  display: block;
+}
+
+.image-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(10,0,16,0.5), transparent);
+  display: flex;
+  align-items: flex-end;
+  padding: 1.5rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.carousel-image-wrapper:hover .image-overlay {
+  opacity: 1;
+}
+
+.image-number {
+  font-family: var(--font-serif);
+  color: var(--starlight-gold);
+  font-size: 1.2rem;
+  font-style: italic;
+}
+
+.carousel-progress-bar {
+  position: absolute;
+  bottom: 10vh;
+  left: 5vw;
+  width: 90vw;
+  height: 1px;
+  background: rgba(255,110,180,0.2);
+}
+
+.progress-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0%;
+  background: var(--rose-pink);
+  box-shadow: 0 0 10px var(--rose-pink);
 }
 
 /* Message Section */
