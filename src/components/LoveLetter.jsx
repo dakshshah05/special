@@ -24,6 +24,7 @@ Daksh ❤️
 
 export default function LoveLetter() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isAutoScrolling, setIsAutoScrolling] = useState(true);
   const textRef = useRef(null);
   const parchmentRef = useRef(null);
 
@@ -35,14 +36,27 @@ export default function LoveLetter() {
             ease: 'none',
             delay: 1,
             onUpdate: () => {
-                // Scroll parchment as text grows
-                if (parchmentRef.current) {
+                // Only auto-scroll if user hasn't tried to manually scroll up
+                if (isAutoScrolling && parchmentRef.current) {
                     parchmentRef.current.scrollTop = parchmentRef.current.scrollHeight;
                 }
+            },
+            onComplete: () => {
+                setIsAutoScrolling(false);
             }
         });
     }
   }, [isOpen]);
+
+  const handleScroll = () => {
+    if (!parchmentRef.current) return;
+    const { scrollTop, scrollHeight, clientHeight } = parchmentRef.current;
+    
+    // If the user scrolls up even a little bit from the bottom, stop auto-scrolling
+    if (scrollHeight - scrollTop - clientHeight > 50) {
+      setIsAutoScrolling(false);
+    }
+  };
 
   return (
     <div className="love-letter-wrapper" style={{ padding: '4rem 2rem', textAlign: 'center' }}>
@@ -82,40 +96,40 @@ export default function LoveLetter() {
                 perspective: '1000px'
             }}
           >
-            {/* 3D Parchment Container */}
             <motion.div 
               ref={parchmentRef}
               className="parchment-container"
+              onScroll={handleScroll}
               initial={{ rotateX: 20, y: 100, scale: 0.9 }}
               animate={{ rotateX: 0, y: 0, scale: 1 }}
               exit={{ rotateX: 20, y: 100, scale: 0.9 }}
               style={{
-                  background: 'ivory',
+                  background: '#fdfcf0',
                   color: '#2b1b1b',
-                  padding: '4rem',
+                  padding: '4rem 3rem',
                   borderRadius: '10px',
                   maxWidth: '700px',
                   width: '90%',
                   height: '80vh',
-                  overflowY: 'auto',
+                  overflowY: 'scroll', // Explicitly scroll
+                  WebkitOverflowScrolling: 'touch', // For mobile smoothness
                   boxShadow: '0 50px 100px rgba(0,0,0,0.8)',
-                  fontFamily: 'var(--font-serif)',
-                  fontSize: '1.3rem',
+                  fontFamily: 'serif',
+                  fontSize: '1.2rem',
                   lineHeight: '1.8',
                   position: 'relative',
-                  backgroundImage: 'url("https://www.transparenttextures.com/patterns/paper.png")',
-                  border: '15px solid transparent',
+                  border: '15px solid #d4b895',
                   borderImage: 'linear-gradient(45deg, #d4b895, #fff5e6) 30 stretch'
               }}
             >
               <button 
                 onClick={() => setIsOpen(false)}
-                style={{ position: 'absolute', top: '1rem', right: '1rem', background: 'none', border: 'none', fontSize: '1.5rem', cursor: 'pointer', color: '#8b4513', zIndex: 10 }}
+                style={{ position: 'absolute', top: '1rem', right: '1.5rem', background: 'none', border: 'none', fontSize: '2rem', cursor: 'pointer', color: '#8b4513', zIndex: 100 }}
               >
                 ✕
               </button>
 
-              <div ref={textRef} style={{ whiteSpace: 'pre-line', textAlign: 'left' }} />
+              <div ref={textRef} style={{ whiteSpace: 'pre-line', textAlign: 'left', minHeight: '100.1%' }} />
               
               <div style={{ marginTop: '3rem', textAlign: 'center', fontSize: '2rem', filter: 'blur(0.5px)' }}>
                  🌸🦋✨💖✨🦋🌸

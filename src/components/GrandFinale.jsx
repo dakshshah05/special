@@ -41,9 +41,6 @@ export default function GrandFinale() {
   };
 
   const closeFinale = () => {
-    // Force a scroll jump first to prevent re-triggering and break scroll lock
-    window.scrollTo({ top: 0, behavior: 'auto' });
-    
     gsap.to(finaleRef.current, { 
       opacity: 0, 
       duration: 0.8,
@@ -51,9 +48,10 @@ export default function GrandFinale() {
       onComplete: () => {
         gsap.set(finaleRef.current, { display: 'none', pointerEvents: 'none' });
         setActive(false);
-        // Ensure we are truly at the top
-        document.documentElement.scrollTop = 0;
-        document.body.scrollTop = 0;
+        const wishesSection = document.getElementById('wishes');
+        if (wishesSection) {
+            wishesSection.scrollIntoView({ behavior: 'smooth' });
+        }
       }
     });
   };
