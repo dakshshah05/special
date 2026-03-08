@@ -257,18 +257,19 @@ export default function HeroSection() {
     }
 
     // Scroll zoom effect
-    ScrollTrigger.create({
-      trigger: sectionRef.current,
-      start: 'top top',
-      end: 'bottom top',
-      scrub: 1,
-      onUpdate: (self) => {
-        const canvas = sectionRef.current?.querySelector('canvas');
-        if (canvas) {
-          canvas.style.transform = `scale(${1 + self.progress * 0.3})`;
-        }
-      }
-    });
+    const canvas = sectionRef.current?.querySelector('canvas');
+    if (canvas) {
+      gsap.to(canvas, {
+        scale: 1.3,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top top',
+          end: 'bottom top',
+          scrub: true,
+        },
+      });
+    }
 
     return () => {
       tl.kill();
@@ -281,7 +282,8 @@ export default function HeroSection() {
       <div style={{ position: 'absolute', inset: 0, zIndex: 1 }}>
         <Canvas
           camera={{ position: [0, 0, 8], fov: 60 }}
-          gl={{ antialias: true, alpha: true }}
+          gl={{ antialias: false, alpha: true, powerPreference: 'high-performance' }}
+          dpr={[1, 1.5]}
           style={{ background: 'transparent' }}
         >
           <ambientLight intensity={0.3} />

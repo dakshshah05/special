@@ -10,6 +10,9 @@ gsap.registerPlugin(ScrollTrigger);
 function OrbitingSphere() {
   const groupRef = useRef();
   const ringRef = useRef();
+  const meshRef = useRef();
+  const dummy = useMemo(() => new THREE.Object3D(), []);
+  const count = 12;
 
   useFrame(({ clock }) => {
     const t = clock.getElapsedTime();
@@ -20,12 +23,22 @@ function OrbitingSphere() {
     if (ringRef.current) {
       ringRef.current.rotation.z = t * 0.5;
     }
+    
+    if (meshRef.current) {
+      for (let i = 0; i < count; i++) {
+        const angle = (i / count) * Math.PI * 2;
+        dummy.position.set(Math.cos(angle) * 2, Math.sin(angle) * 0.5, Math.sin(angle) * 2);
+        dummy.updateMatrix();
+        meshRef.current.setMatrixAt(i, dummy.matrix);
+      }
+      meshRef.current.instanceMatrix.needsUpdate = true;
+    }
   });
 
   return (
     <group ref={groupRef}>
       <mesh>
-        <sphereGeometry args={[1.2, 32, 32]} />
+        <sphereGeometry args={[1.2, 24, 24]} />
         <meshStandardMaterial
           color="#1a0533"
           emissive="#ff6eb4"
@@ -35,38 +48,28 @@ function OrbitingSphere() {
         />
       </mesh>
       <mesh ref={ringRef}>
-        <torusGeometry args={[2, 0.04, 16, 100]} />
+        <torusGeometry args={[2, 0.04, 12, 64]} />
         <meshStandardMaterial
           color="#ffd700"
           emissive="#ffd700"
           emissiveIntensity={0.5}
         />
       </mesh>
-      {/* Orbiting particles */}
-      {[...Array(12)].map((_, i) => {
-        const angle = (i / 12) * Math.PI * 2;
-        return (
-          <mesh key={i} position={[Math.cos(angle) * 2, Math.sin(angle) * 0.5, Math.sin(angle) * 2]}>
-            <sphereGeometry args={[0.06, 8, 8]} />
-            <meshStandardMaterial
-              color="#e8c4ff"
-              emissive="#e8c4ff"
-              emissiveIntensity={1}
-            />
-          </mesh>
-        );
-      })}
+      <instancedMesh ref={meshRef} args={[null, null, count]}>
+        <sphereGeometry args={[0.06, 8, 8]} />
+        <meshStandardMaterial color="#e8c4ff" emissive="#e8c4ff" emissiveIntensity={1} />
+      </instancedMesh>
       <pointLight position={[0, 0, 0]} intensity={1} color="#ff6eb4" distance={5} />
     </group>
   );
 }
 
 // Confetti particles for Chapter 3
-function ConfettiParticles({ count = 100 }) {
+function ConfettiParticles({ count = 80 }) {
   const meshRef = useRef();
-  const dummy = new THREE.Object3D();
+  const dummy = useMemo(() => new THREE.Object3D(), []);
 
-  const particles = useRef(
+  const particles = useMemo(() =>
     Array.from({ length: count }, () => ({
       x: (Math.random() - 0.5) * 8,
       y: Math.random() * 10,
@@ -74,8 +77,8 @@ function ConfettiParticles({ count = 100 }) {
       speed: 0.5 + Math.random() * 1,
       rotSpeed: Math.random() * 3,
       phase: Math.random() * Math.PI * 2,
-    }))
-  ).current;
+    })),
+  [count]);
 
   useFrame(({ clock }) => {
     const t = clock.getElapsedTime();
@@ -102,7 +105,7 @@ function ConfettiParticles({ count = 100 }) {
     <instancedMesh ref={meshRef} args={[null, null, count]}>
       <boxGeometry args={[1, 1, 1]} />
       <meshStandardMaterial
-        color={colors[Math.floor(Math.random() * colors.length)]}
+        color="#ff6eb4"
         emissive="#ff6eb4"
         emissiveIntensity={0.3}
       />
@@ -128,7 +131,7 @@ export default function TimelineSection() {
       scrollTrigger: {
         trigger: container,
         pin: true,
-        scrub: 1,
+        scrub: true,
         end: () => `+=${totalWidth}`,
         onUpdate: (self) => {
           // Age counter in chapter 2
@@ -148,12 +151,12 @@ export default function TimelineSection() {
         {
           opacity: 1,
           y: 0,
-          duration: 1,
-          ease: 'power3.out',
+          duration: 0.8,
+          ease: 'power2.out',
           scrollTrigger: {
             trigger: el,
             containerAnimation: scrollTween,
-            start: 'left 80%',
+            start: 'left 85%',
             toggleActions: 'play none none none',
           }
         }
@@ -220,7 +223,11 @@ export default function TimelineSection() {
               </div>
             </div>
             <div style={{ flex: 1, height: '400px' }}>
-              <Canvas camera={{ position: [0, 0, 5], fov: 50 }}>
+              <Canvas 
+                camera={{ position: [0, 0, 5], fov: 50 }}
+                gl={{ antialias: false, alpha: true, powerPreference: 'high-performance' }}
+                dpr={[1, 1.5]}
+              >
                 <ambientLight intensity={0.3} />
                 <OrbitingSphere />
               </Canvas>
@@ -232,10 +239,14 @@ export default function TimelineSection() {
         <div className="timeline-panel golden">
           <div style={{ display: 'flex', alignItems: 'center', gap: '4rem', maxWidth: '1200px' }}>
             <div style={{ flex: 1, height: '400px' }}>
-              <Canvas camera={{ position: [0, 0, 6], fov: 50 }}>
+              <Canvas 
+                camera={{ position: [0, 0, 6], fov: 50 }}
+                gl={{ antialias: false, alpha: true, powerPreference: 'high-performance' }}
+                dpr={[1, 1.5]}
+              >
                 <ambientLight intensity={0.5} />
                 <pointLight position={[3, 3, 3]} intensity={1} color="#ffd700" />
-                <ConfettiParticles count={100} />
+                <ConfettiParticles count={80} />
               </Canvas>
             </div>
             <div style={{ flex: 1 }}>

@@ -65,34 +65,30 @@ function Balloon({ position, color, delay = 0 }) {
         onClick={handlePop}
         scale={hovered ? 1.15 : 1}
       >
-        <sphereGeometry args={[0.6, 32, 32]} />
-        <meshPhysicalMaterial
+        <sphereGeometry args={[0.6, 24, 24]} />
+        <meshStandardMaterial
           color={color}
-          transmission={0.85}
-          roughness={0.05}
-          metalness={0.1}
-          thickness={0.5}
-          ior={1.5}
+          roughness={0.1}
+          metalness={0.2}
           transparent
-          opacity={0.9}
-          envMapIntensity={1}
+          opacity={0.8}
         />
       </mesh>
 
       {/* Balloon knot */}
       <mesh position={[0, -0.65, 0]}>
-        <coneGeometry args={[0.08, 0.15, 8]} />
+        <coneGeometry args={[0.08, 0.15, 6]} />
         <meshStandardMaterial color={color} />
       </mesh>
 
       {/* Balloon string */}
       <mesh position={[0, -0.65, 0]}>
-        <tubeGeometry args={[stringCurve, 20, 0.01, 4, false]} />
-        <meshStandardMaterial color="#e8c4ff" transparent opacity={0.4} />
+        <tubeGeometry args={[stringCurve, 12, 0.01, 3, false]} />
+        <meshStandardMaterial color="#e8c4ff" transparent opacity={0.3} />
       </mesh>
 
       {/* Inner glow */}
-      <pointLight position={[0, 0, 0]} intensity={0.3} color={color} distance={2} />
+      <pointLight position={[0, 0, 0]} intensity={0.2} color={color} distance={1.5} />
     </group>
   );
 }
@@ -101,7 +97,7 @@ function easeOut(t) {
   return 1 - Math.pow(1 - t, 3);
 }
 
-function PopParticles({ position, color, count = 20 }) {
+function PopParticles({ position, color, count = 15 }) {
   const ref = useRef();
   const dummy = useMemo(() => new THREE.Object3D(), []);
 
@@ -142,7 +138,7 @@ function PopParticles({ position, color, count = 20 }) {
 
   return (
     <instancedMesh ref={ref} args={[null, null, count]}>
-      <sphereGeometry args={[1, 6, 6]} />
+      <sphereGeometry args={[1, 4, 4]} />
       <meshBasicMaterial color={color} />
     </instancedMesh>
   );
@@ -172,7 +168,8 @@ export default function FloatingBalloons() {
     }}>
       <Canvas
         camera={{ position: [0, 0, 10], fov: 50 }}
-        gl={{ antialias: true, alpha: true }}
+        gl={{ antialias: false, alpha: true, powerPreference: 'high-performance' }}
+        dpr={[1, 1.5]}
         style={{ background: 'transparent' }}
       >
         <ambientLight intensity={0.5} />

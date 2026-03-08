@@ -62,8 +62,7 @@ export function useCursor() {
     const animate = () => {
       posRef.current.x = lerp(posRef.current.x, targetRef.current.x, 0.1);
       posRef.current.y = lerp(posRef.current.y, targetRef.current.y, 0.1);
-      cursor.style.left = posRef.current.x + 'px';
-      cursor.style.top = posRef.current.y + 'px';
+      cursor.style.transform = `translate3d(${posRef.current.x}px, ${posRef.current.y}px, 0) translate(-50%, -50%)`;
       animId = requestAnimationFrame(animate);
     };
 

@@ -335,7 +335,11 @@ export default function CakeSection() {
       </h2>
 
       <div className="cake-canvas" style={{ maxWidth: '800px', margin: '0 auto' }}>
-        <Canvas camera={{ position: [3, 3, 3], fov: 40 }}>
+        <Canvas 
+          camera={{ position: [3, 3, 3], fov: 40 }}
+          gl={{ antialias: false, alpha: true, powerPreference: 'high-performance' }}
+          dpr={[1, 1.5]}
+        >
           <ambientLight intensity={0.4} />
           <directionalLight position={[5, 8, 3]} intensity={0.6} />
           <pointLight position={[-3, 3, -3]} intensity={0.3} color="#e8c4ff" />

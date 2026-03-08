@@ -70,26 +70,23 @@ a {
 /* Custom cursor styles */
 .custom-cursor {
   position: fixed;
+  top: 0;
+  left: 0;
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: radial-gradient(circle, var(--rose-pink), transparent);
+  background: var(--rose-pink);
   pointer-events: none;
   z-index: 99999;
-  transform: translate(-50%, -50%);
-  transition:
-    width 0.3s ease,
-    height 0.3s ease,
-    background 0.3s ease,
-    filter 0.3s ease;
   mix-blend-mode: screen;
+  will-change: transform;
 }
 
 .custom-cursor.expanded {
-  width: 80px;
-  height: 80px;
-  background: radial-gradient(circle, var(--lavender-glow), transparent);
-  filter: blur(4px);
+  width: 60px;
+  height: 60px;
+  background: var(--lavender-glow);
+  opacity: 0.5;
 }
 
 /* Click burst */
@@ -300,12 +297,11 @@ a {
   height: 50px;
   border-radius: 50%;
   border: 1px solid var(--rose-pink);
-  background: rgba(255, 110, 180, 0.1);
+  background: rgba(255, 110, 180, 0.2);
   color: var(--rose-pink);
   font-size: 1.5rem;
   cursor: pointer;
   z-index: 10;
-  backdrop-filter: blur(10px);
   transition: all 0.3s ease;
 }
 
@@ -440,8 +436,7 @@ a {
   height: 50px;
   border-radius: 50%;
   border: 1px solid rgba(255, 110, 180, 0.3);
-  background: rgba(10, 0, 16, 0.8);
-  backdrop-filter: blur(20px);
+  background: rgba(10, 0, 16, 0.9);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -457,8 +452,7 @@ a {
 .nav-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(10, 0, 16, 0.95);
-  backdrop-filter: blur(20px);
+  background: rgba(10, 0, 16, 0.98);
   z-index: 999;
   display: flex;
   align-items: center;
