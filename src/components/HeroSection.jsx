@@ -289,8 +289,8 @@ export default function HeroSection() {
           <ambientLight intensity={0.3} />
           <pointLight position={[5, 5, 5]} intensity={1} color="#ff6eb4" />
           <pointLight position={[-5, -5, 5]} intensity={0.5} color="#ffd700" />
-          <StarField count={5000} />
-          <RosePetals count={40} />
+          <StarField count={2000} />
+          <RosePetals count={20} />
           <Aurora />
           <FallbackHeroText />
         </Canvas>

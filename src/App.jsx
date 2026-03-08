@@ -65,62 +65,50 @@ export default function App() {
 
   return (
     <>
-      <EnhancedCursor />
-      <Navigation />
-      <ParallaxLayers />
-      <PetalStorm />
-      <LoveMeter />
-      <ReactionPanel />
-      <DynamicEnvironment />
-      <GrandFinale />
-      
-      <ShakeHug />
-
       <Loader onComplete={() => setLoaded(true)} />
+      
+      {/* Background Interactive Environment */}
+      <DynamicEnvironment />
+      <ParallaxLayers />
+      
+      {/* Global Interactive Elements - only shown after load */}
+      <div style={{ opacity: loaded ? 1 : 0, transition: 'opacity 1s ease' }}>
+        <EnhancedCursor />
+        <Navigation />
+        <PetalStorm />
+        <LoveMeter />
+        <ReactionPanel />
+        <GrandFinale />
+        <ShakeHug />
+      </div>
 
-      <main style={{ opacity: loaded ? 1 : 0, transition: 'opacity 0.5s ease' }}>
-        {/* Full-screen 3D Exploration Secret Section */}
+      <main style={{ 
+        opacity: loaded ? 1 : 0, 
+        transition: 'opacity 0.5s ease',
+        position: 'relative',
+        zIndex: 20 
+      }}>
         <SecretGarden />
 
-        {/* Hero + Balloons */}
         <div style={{ position: 'relative' }}>
           <HeroSection />
           <FloatingBalloons />
         </div>
 
-        {/* Storytelling Timeline */}
         <TimelineSection />
-
-        {/* Photo Carousel */}
         <PhotoCarousel />
-
-        {/* Birthday Message */}
         <MessageSection />
 
-        {/* 3D Rose Garden */}
-        <RoseGarden onGoldenRoseClick={() => {
-           // Logic for golden rose is handled inside the component
-        }} />
+        <RoseGarden onGoldenRoseClick={() => {}} />
 
-        {/* Interactive Cake */}
         <CakeSection />
-
-        {/* 3D Gift Box */}
         <GiftSection />
-
-        {/* Final Wishes + Fireworks */}
         <WishesSection />
         
-        {/* Hidden Physics Playground Rocket Entrance */}
         <PhysicsPlayground />
-
-        {/* Emoji Parade */}
         <EmojiParade />
-
-        {/* Personalized Note */}
         <LoveLetter />
 
-        {/* Footer */}
         <footer style={{
           padding: '3rem 2rem',
           textAlign: 'center',

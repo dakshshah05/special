@@ -2,60 +2,35 @@ import React, { useRef, useMemo, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Float, Center, Sparkles } from '@react-three/drei';
 import * as THREE from 'three';
-import gsap from 'gsap';
 
 function Rose({ position, index, isGolden, onRoseClick }) {
-  const [bloomed, setBloomed] = useState(false);
-  const [hovered, setHovered] = useState(false);
-  const stemRef = useRef();
-  const petalsRef = useRef();
   const groupRef = useRef();
+  const petalsRef = useRef();
+  const [hovered, setHovered] = useState(false);
 
-  // Create stem geometry
   const curve = useMemo(() => {
     const points = [];
-    for (let i = 0; i <= 20; i++) {
-        points.push(new THREE.Vector3(
-            Math.sin(i * 0.2) * 0.1,
-            i * 0.15,
-            Math.cos(i * 0.2) * 0.1
-        ));
+    for (let i = 0; i <= 10; i++) { // Reduced segments
+        points.push(new THREE.Vector3(Math.sin(i * 0.2) * 0.05, i * 0.15, Math.cos(i * 0.2) * 0.05));
     }
     return new THREE.CatmullRomCurve3(points);
   }, []);
 
-  const { stemWidth, stemColor } = useMemo(() => ({
-    stemWidth: 0.02,
-    stemColor: isGolden ? '#aa8800' : '#2d4d22'
-  }), [isGolden]);
-
-  useFrame((state) => {
-    if (groupRef.current) {
-        // Growth based on scroll would be better, but we'll use a local state or logic
-        // For now, let's keep it reactive to a "bloom" state
-    }
-    if (petalsRef.current) {
-        petalsRef.current.rotation.y += 0.01;
-    }
+  useFrame(() => {
+    if (petalsRef.current) petalsRef.current.rotation.y += 0.01;
   });
-
-  const handlePointerOver = () => setHovered(true);
-  const handlePointerOut = () => setHovered(false);
 
   return (
     <group position={position} ref={groupRef} onClick={() => onRoseClick(isGolden)}>
       <Float speed={1} rotationIntensity={0.2} floatIntensity={0.5}>
-        {/* Stem */}
-        <mesh ref={stemRef}>
-          <tubeGeometry args={[curve, 20, stemWidth, 8, false]} />
-          <meshStandardMaterial color={stemColor} />
+        <mesh>
+          <tubeGeometry args={[curve, 10, 0.02, 6, false]} />
+          <meshStandardMaterial color={isGolden ? '#aa8800' : '#2d4d22'} />
         </mesh>
-
-        {/* Petals (Simplified procedural rose) */}
-        <group position={[0, 3, 0]} ref={petalsRef} onPointerOver={handlePointerOver} onPointerOut={handlePointerOut}>
-          {[...Array(8)].map((_, i) => (
-            <mesh key={i} rotation={[0, (i / 8) * Math.PI * 2, Math.PI / 4]}>
-              <sphereGeometry args={[0.3, 16, 16]} />
+        <group position={[0, 1.5, 0]} ref={petalsRef} onPointerOver={() => setHovered(true)} onPointerOut={() => setHovered(false)}>
+          {[...Array(6)].map((_, i) => ( // Reduced petals
+            <mesh key={i} rotation={[0, (i / 6) * Math.PI * 2, Math.PI / 4]}>
+              <sphereGeometry args={[0.25, 12, 12]} />
               <meshStandardMaterial 
                 color={isGolden ? '#ffd700' : '#ff6eb4'} 
                 emissive={isGolden ? '#ffd700' : '#ff6eb4'}
@@ -63,7 +38,7 @@ function Rose({ position, index, isGolden, onRoseClick }) {
               />
             </mesh>
           ))}
-          {hovered && <Sparkles count={20} scale={1.5} size={2} color={isGolden ? "#ffd700" : "#ff6eb4"} />}
+          {hovered && <Sparkles count={10} scale={1} size={2} color={isGolden ? "#ffd700" : "#ff6eb4"} />}
         </group>
       </Float>
     </group>
@@ -73,54 +48,37 @@ function Rose({ position, index, isGolden, onRoseClick }) {
 export default function RoseGarden({ onGoldenRoseClick }) {
   const [sunshineReveal, setSunshineReveal] = useState(false);
 
-  const handleRoseClick = (isGolden) => {
-    if (isGolden) {
-        setSunshineReveal(true);
-        onGoldenRoseClick();
-    }
-  };
-
   const rosePositions = useMemo(() => {
     const pos = [];
     for (let i = 0; i < 20; i++) {
-        pos.push([
-            (i - 10) * 1.5 + (Math.random() - 0.5) * 1,
-            -2,
-            (Math.random() - 0.5) * 3
-        ]);
+        pos.push([(i - 10) * 1.5 + (Math.random() - 0.5), -2, (Math.random() - 0.5) * 3]);
     }
     return pos;
   }, []);
 
   return (
-    <section id="rose-garden" className="section rose-garden-section">
-      <div className="section-title-container">
+    <section id="rose-garden" className="section rose-garden-section" style={{ position: 'relative', zIndex: 1 }}>
+      <div className="section-title-container" style={{ textAlign: 'center', padding: '2rem' }}>
         <h2 className="garden-title">Garden of 20 Roses 🌹</h2>
         <p className="garden-subtitle">Each one representing a year of your beauty</p>
       </div>
-
-      <div style={{ width: '100%', height: '80vh' }}>
-        <Canvas camera={{ position: [0, 0, 15], fov: 40 }} dpr={[1, 1.5]}>
+      <div style={{ width: '100%', height: '70vh' }}>
+        <Canvas camera={{ position: [0, 0, 15], fov: 40 }} gl={{ antialias: false }} dpr={1}>
           <ambientLight intensity={0.5} />
           <pointLight position={[10, 10, 10]} intensity={1} />
           <Center>
             {rosePositions.map((pos, i) => (
-              <Rose 
-                key={i} 
-                position={pos} 
-                index={i} 
-                isGolden={i === 19}
-                onRoseClick={handleRoseClick}
-              />
+              <Rose key={i} position={pos} index={i} isGolden={i === 19} onRoseClick={(gold) => {
+                  if (gold) { setSunshineReveal(true); onGoldenRoseClick(); }
+              }} />
             ))}
           </Center>
         </Canvas>
       </div>
-
       {sunshineReveal && (
-        <div className="sunshine-overlay active">
-          <div className="sunshine-text">YOU ARE MY SUNSHINE ☀️</div>
-          <button className="close-sunshine" onClick={() => setSunshineReveal(false)}>Close</button>
+        <div className="sunshine-overlay active" style={{ position: 'fixed', inset: 0, zIndex: 100000, background: 'linear-gradient(to bottom, #ffd700, #ff6eb4)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
+          <div className="sunshine-text" style={{ fontSize: '3rem', color: 'white', fontWeight: 'bold' }}>YOU ARE MY SUNSHINE ☀️</div>
+          <button onClick={() => setSunshineReveal(false)} style={{ marginTop: '2rem', padding: '10px 30px', borderRadius: '20px', border: 'none', cursor: 'pointer' }}>Close</button>
         </div>
       )}
     </section>

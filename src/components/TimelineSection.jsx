@@ -12,7 +12,7 @@ function OrbitingSphere() {
   const ringRef = useRef();
   const meshRef = useRef();
   const dummy = useMemo(() => new THREE.Object3D(), []);
-  const count = 12;
+  const count = 8;
 
   useFrame(({ clock }) => {
     const t = clock.getElapsedTime();
@@ -65,7 +65,7 @@ function OrbitingSphere() {
 }
 
 // Confetti particles for Chapter 3
-function ConfettiParticles({ count = 80 }) {
+function ConfettiParticles({ count = 30 }) {
   const meshRef = useRef();
   const dummy = useMemo(() => new THREE.Object3D(), []);
 
@@ -226,7 +226,7 @@ export default function TimelineSection() {
               <Canvas 
                 camera={{ position: [0, 0, 5], fov: 50 }}
                 gl={{ antialias: false, alpha: true, powerPreference: 'high-performance' }}
-                dpr={[1, 1.5]}
+                dpr={[1, 1]}
               >
                 <ambientLight intensity={0.3} />
                 <OrbitingSphere />
@@ -242,7 +242,7 @@ export default function TimelineSection() {
               <Canvas 
                 camera={{ position: [0, 0, 6], fov: 50 }}
                 gl={{ antialias: false, alpha: true, powerPreference: 'high-performance' }}
-                dpr={[1, 1.5]}
+                dpr={[1, 1]}
               >
                 <ambientLight intensity={0.5} />
                 <pointLight position={[3, 3, 3]} intensity={1} color="#ffd700" />

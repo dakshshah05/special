@@ -2,13 +2,12 @@ import React, { useRef, useMemo, useEffect } from 'react';
 import { Canvas, useFrame, useLoader } from '@react-three/fiber';
 import * as THREE from 'three';
 
-const PETAL_COUNT = 1000;
+const PETAL_COUNT = 300; 
 
 function Petals({ scrollVelocity }) {
   const meshRef = useRef();
   const dummy = useMemo(() => new THREE.Object3D(), []);
   
-  // Load textures
   const textures = useLoader(THREE.TextureLoader, [
     '/assets/rose_petal.png',
     '/assets/cherry_blossom.png',
@@ -34,7 +33,6 @@ function Petals({ scrollVelocity }) {
     const velocity = scrollVelocity.current || 0;
     
     petals.forEach((p, i) => {
-      // Base Fall + Scroll Velocity
       const fallSpeed = p.speed * 0.1;
       const combinedSpeed = fallSpeed + (velocity * 0.005);
       
@@ -61,9 +59,9 @@ function Petals({ scrollVelocity }) {
     <instancedMesh ref={meshRef} args={[null, null, PETAL_COUNT]}>
       <planeGeometry args={[1, 1]} />
       <meshStandardMaterial 
-        map={textures[0]} /* Simplified to use first texture for all or we'd need multiple instancedMeshes */
+        map={textures[0]} 
         transparent 
-        opacity={0.8} 
+        opacity={0.6} 
         side={THREE.DoubleSide}
         depthWrite={false}
       />
@@ -86,8 +84,16 @@ export default function PetalStorm() {
   }, []);
 
   return (
-    <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 50 }}>
-      <Canvas camera={{ position: [0, 0, 10], fov: 60 }} gl={{ alpha: true }}>
+    <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 5 }}>
+      <Canvas 
+        camera={{ position: [0, 0, 10], fov: 60 }} 
+        gl={{ 
+            alpha: true, 
+            antialias: false, 
+            powerPreference: 'high-performance'
+        }}
+        dpr={1} 
+      >
         <ambientLight intensity={0.7} />
         <pointLight position={[10, 10, 10]} intensity={1} />
         <React.Suspense fallback={null}>
