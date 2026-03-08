@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, lazy, Suspense } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Lenis from '@studio-freight/lenis';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -13,6 +13,11 @@ import PhotoCarousel from './components/PhotoCarousel';
 import MessageSection from './components/MessageSection';
 import CakeSection from './components/CakeSection';
 import WishesSection from './components/WishesSection';
+import ShakeHug from './components/ShakeHug';
+import RoseGarden from './components/RoseGarden';
+import GiftSection from './components/GiftSection';
+import EmojiParade from './components/EmojiParade';
+import LoveLetter from './components/LoveLetter';
 
 gsap.registerPlugin(ScrollTrigger, TextPlugin);
 
@@ -58,6 +63,7 @@ export default function App() {
     <>
       <CustomCursor />
       <Navigation />
+      <ShakeHug />
 
       <Loader onComplete={() => setLoaded(true)} />
 
@@ -77,11 +83,25 @@ export default function App() {
         {/* Birthday Message */}
         <MessageSection />
 
+        {/* 3D Rose Garden */}
+        <RoseGarden onGoldenRoseClick={() => {
+           // Logic for golden rose is handled inside the component
+        }} />
+
         {/* Interactive Cake */}
         <CakeSection />
 
+        {/* 3D Gift Box */}
+        <GiftSection />
+
         {/* Final Wishes + Fireworks */}
         <WishesSection />
+
+        {/* Emoji Parade */}
+        <EmojiParade />
+
+        {/* Personalized Note */}
+        <LoveLetter />
 
         {/* Footer */}
         <footer style={{

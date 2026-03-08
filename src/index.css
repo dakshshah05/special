@@ -563,3 +563,136 @@ a {
     font-size: 1.125rem;
   }
 }
+
+/* Shake & Hug Effects */
+.shimmer-effect {
+  animation: body-shimmer 0.5s ease-in-out;
+}
+
+@keyframes body-shimmer {
+  0% { filter: brightness(1); }
+  50% { filter: brightness(1.5) saturate(1.2); }
+  100% { filter: brightness(1); }
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.05); opacity: 1; }
+  100% { transform: scale(1); opacity: 0.8; }
+}
+
+@keyframes bounceIn {
+  0% { opacity: 0; transform: scale(0.3); }
+  50% { opacity: 1; transform: scale(1.05); }
+  70% { transform: scale(0.9); }
+  100% { transform: scale(1); }
+}
+
+.floating-heart-hug {
+  position: fixed;
+  pointer-events: none;
+  z-index: 10000;
+}
+
+/* Emoji Parade Animations */
+@keyframes march {
+  0% { transform: translateX(100vw); }
+  100% { transform: translateX(-100%); }
+}
+
+@keyframes emoji-bounce {
+  from { transform: translateY(0); }
+  to { transform: translateY(-15px); }
+}
+
+/* Rose Garden & Sunshine Reveal */
+.rose-garden-section {
+  background: linear-gradient(180deg, var(--deep-void), #0f1a0a, var(--deep-void));
+  padding: 6rem 0;
+}
+
+.garden-title {
+  text-align: center;
+  font-size: 3rem;
+  color: #ff6eb4;
+}
+
+.garden-subtitle {
+  text-align: center;
+  color: #c4ffd7;
+  opacity: 0.7;
+  letter-spacing: 0.2em;
+}
+
+.sunshine-overlay {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle, #ffcc33 0%, #ff6600 100%);
+  z-index: 30000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1s ease;
+}
+
+.sunshine-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.sunshine-text {
+  font-family: var(--font-serif);
+  font-size: 5rem;
+  font-weight: bold;
+  color: white;
+  text-shadow: 0 0 50px rgba(255, 255, 255, 0.8);
+  animation: rotateIn 1.5s ease-out;
+}
+
+@keyframes rotateIn {
+  0% { transform: scale(0) rotate(-180deg); opacity: 0; }
+  100% { transform: scale(1) rotate(0); opacity: 1; }
+}
+
+.close-sunshine {
+  margin-top: 3rem;
+  padding: 10px 30px;
+  background: white;
+  border: none;
+  border-radius: 20px;
+  color: #ff6600;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* Gift Section & Floating 20 */
+@keyframes floatUp {
+  0% { transform: translateY(50px); opacity: 0; }
+  100% { transform: translateY(-50px); opacity: 1; }
+}
+
+.gift-section {
+  background: radial-gradient(circle at center, #1a0533, var(--deep-void));
+}
+
+.gift-title {
+  text-align: center;
+  font-size: 3rem;
+  color: var(--starlight-gold);
+}
+
+.gift-subtitle {
+  text-align: center;
+  color: var(--lavender-glow);
+  opacity: 0.7;
+}
+
+.section-title-container {
+    margin-bottom: 3rem;
+    z-index: 10;
+    position: relative;
+    text-align: center;
+}
