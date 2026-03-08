@@ -4,7 +4,6 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { TextPlugin } from 'gsap/TextPlugin';
 import Loader from './components/Loader';
-import CustomCursor from './components/CustomCursor';
 import Navigation from './components/Navigation';
 import HeroSection from './components/HeroSection';
 import FloatingBalloons from './components/FloatingBalloons';
@@ -18,6 +17,15 @@ import RoseGarden from './components/RoseGarden';
 import GiftSection from './components/GiftSection';
 import EmojiParade from './components/EmojiParade';
 import LoveLetter from './components/LoveLetter';
+import EnhancedCursor from './components/EnhancedCursor';
+import ParallaxLayers from './components/ParallaxLayers';
+import PetalStorm from './components/PetalStorm';
+import LoveMeter from './components/LoveMeter';
+import ReactionPanel from './components/ReactionPanel';
+import DynamicEnvironment from './components/DynamicEnvironment';
+import SecretGarden from './components/SecretGarden';
+import PhysicsPlayground from './components/PhysicsPlayground';
+import GrandFinale from './components/GrandFinale';
 
 gsap.registerPlugin(ScrollTrigger, TextPlugin);
 
@@ -35,14 +43,10 @@ export default function App() {
     });
 
     lenisRef.current = lenis;
-
-    // Connect Lenis to GSAP ScrollTrigger
     lenis.on('scroll', ScrollTrigger.update);
-
     gsap.ticker.add((time) => {
       lenis.raf(time * 1000);
     });
-
     gsap.ticker.lagSmoothing(0);
 
     return () => {
@@ -61,13 +65,23 @@ export default function App() {
 
   return (
     <>
-      <CustomCursor />
+      <EnhancedCursor />
       <Navigation />
+      <ParallaxLayers />
+      <PetalStorm />
+      <LoveMeter />
+      <ReactionPanel />
+      <DynamicEnvironment />
+      <GrandFinale />
+      
       <ShakeHug />
 
       <Loader onComplete={() => setLoaded(true)} />
 
       <main style={{ opacity: loaded ? 1 : 0, transition: 'opacity 0.5s ease' }}>
+        {/* Full-screen 3D Exploration Secret Section */}
+        <SecretGarden />
+
         {/* Hero + Balloons */}
         <div style={{ position: 'relative' }}>
           <HeroSection />
@@ -96,6 +110,9 @@ export default function App() {
 
         {/* Final Wishes + Fireworks */}
         <WishesSection />
+        
+        {/* Hidden Physics Playground Rocket Entrance */}
+        <PhysicsPlayground />
 
         {/* Emoji Parade */}
         <EmojiParade />
@@ -112,7 +129,9 @@ export default function App() {
           fontSize: '0.875rem',
           letterSpacing: '0.2em',
           opacity: 0.5,
-          background: 'var(--deep-void)',
+          background: 'transparent',
+          position: 'relative',
+          zIndex: 10
         }}>
           <p>Made with 💖 for Shariya</p>
           <p style={{ marginTop: '0.5rem', fontSize: '0.75rem' }}>
