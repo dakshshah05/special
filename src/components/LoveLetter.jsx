@@ -59,8 +59,12 @@ export default function LoveLetter() {
                   backgroundSize: '20px 20px',
                   boxShadow: '0 30px 60px rgba(0,0,0,0.5)',
                   maxHeight: '80vh',
-                  overflowY: 'auto'
+                  overflowY: 'auto',
+                  WebkitOverflowScrolling: 'touch'
               }}
+              onWheel={(e) => e.stopPropagation()}
+              onTouchStart={(e) => e.stopPropagation()}
+              onTouchMove={(e) => e.stopPropagation()}
             >
               <button 
                 onClick={() => setIsOpen(false)}

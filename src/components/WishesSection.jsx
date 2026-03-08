@@ -183,17 +183,39 @@ export default function WishesSection() {
 
   const handleWishClick = useCallback(() => {
     setShowShimmer(true);
+    
+    // Create random floating stars/wishes
+    for (let i = 0; i < 20; i++) {
+        const star = document.createElement('div');
+        star.className = 'confetti-particle';
+        star.innerHTML = '✨';
+        star.style.left = Math.random() * 100 + 'vw';
+        star.style.top = '100vh';
+        star.style.fontSize = (10 + Math.random() * 20) + 'px';
+        document.body.appendChild(star);
+
+        gsap.to(star, {
+            y: -window.innerHeight - 200,
+            x: '+=' + (Math.random() - 0.5) * 400,
+            rotation: Math.random() * 720,
+            opacity: 0,
+            duration: 2 + Math.random() * 2,
+            ease: 'power1.out',
+            onComplete: () => star.remove()
+        });
+    }
+
     if (shimmerRef.current) {
       gsap.fromTo(shimmerRef.current,
         { opacity: 0 },
         {
           opacity: 1,
-          duration: 0.5,
+          duration: 0.8,
           ease: 'power2.in',
           onComplete: () => {
             gsap.to(shimmerRef.current, {
               opacity: 0,
-              duration: 2,
+              duration: 2.5,
               ease: 'power2.out',
               delay: 0.5,
             });
