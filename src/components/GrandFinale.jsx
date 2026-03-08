@@ -5,53 +5,55 @@ export default function GrandFinale() {
   const [active, setActive] = useState(false);
   const [hasTriggered, setHasTriggered] = useState(false);
   const finaleRef = useRef();
+  const contentRef = useRef();
 
   useEffect(() => {
     const handleScroll = () => {
-      // If it's already triggered once, don't listen anymore
       if (hasTriggered) return;
 
-      const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+      const winScroll = window.pageYOffset || document.documentElement.scrollTop;
       const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
       const scrolled = (winScroll / height) * 100;
 
-      if (scrolled >= 99.5 && !active) {
+      // Triggering slightly before 100% to ensure it hits on all browsers
+      if (scrolled >= 98 && !active) {
           triggerFinale();
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, [active, hasTriggered]);
 
   const triggerFinale = () => {
     setActive(true);
-    setHasTriggered(true); // Mark as triggered so it never happens again
-    const tl = gsap.timeline();
+    setHasTriggered(true);
     
-    tl.to(finaleRef.current, { opacity: 1, pointerEvents: 'auto', duration: 1 })
-      .to('.finale-star', { scale: 1.5, opacity: 1, duration: 1 })
-      .to('.finale-star', { scale: 50, opacity: 0, duration: 1.5, ease: 'power4.in' })
-      .from('.finale-face-container', { scale: 0, rotation: 360, opacity: 0, duration: 2, ease: 'elastic.out(1, 0.3)' }, '-=0.5')
-      .from('.finale-text', { y: 100, opacity: 0, stagger: 0.5, duration: 1, ease: 'power3.out' }, '-=1')
-      .to('.finale-confetti', { opacity: 1, duration: 1 });
+    // Use GSAP directly on the overlay for visibility
+    gsap.set(finaleRef.current, { display: 'flex', pointerEvents: 'auto' });
+    
+    const tl = gsap.timeline();
+    tl.to(finaleRef.current, { opacity: 1, duration: 1 })
+      .to('.finale-star', { scale: 50, opacity: 0, duration: 2, ease: 'power4.in' })
+      .from('.finale-face-container', { scale: 0, rotation: 360, opacity: 0, duration: 1.5, ease: 'back.out(1.7)' }, '-=0.5')
+      .from('.finale-text-group', { y: 50, opacity: 0, duration: 1, ease: 'power3.out' }, '-=0.5')
+      .from('.finale-back-btn', { scale: 0, opacity: 0, duration: 0.8, ease: 'elastic.out(1, 0.5)' }, '-=0.3');
   };
 
   const closeFinale = () => {
+    // Force a scroll jump first to prevent re-triggering and break scroll lock
+    window.scrollTo({ top: 0, behavior: 'auto' });
+    
     gsap.to(finaleRef.current, { 
       opacity: 0, 
-      pointerEvents: 'none', 
-      duration: 0.5,
+      duration: 0.8,
+      ease: 'power2.out',
       onComplete: () => {
+        gsap.set(finaleRef.current, { display: 'none', pointerEvents: 'none' });
         setActive(false);
-        // Scroll back to the Wishes section (or slightly above the very end)
-        const wishesSection = document.getElementById('wishes');
-        if (wishesSection) {
-          wishesSection.scrollIntoView({ behavior: 'smooth' });
-        } else {
-          // Fallback: Scroll up slightly
-          window.scrollBy({ top: -500, behavior: 'smooth' });
-        }
+        // Ensure we are truly at the top
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
       }
     });
   };
@@ -59,78 +61,83 @@ export default function GrandFinale() {
   return (
     <div 
         ref={finaleRef} 
-        className={`finale-overlay ${active ? 'active' : ''}`}
+        className="finale-overlay"
         style={{
             position: 'fixed',
             inset: 0,
             background: 'black',
-            display: 'flex',
+            display: 'none', // Controlled by GSAP
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
             opacity: 0,
             pointerEvents: 'none',
-            zIndex: 100000
+            zIndex: 2000000 // Extremely high
         }}
     >
         <div className="finale-star" style={{
             position: 'absolute',
-            width: '10px',
-            height: '10px',
+            width: '20px',
+            height: '20px',
             background: 'white',
             borderRadius: '50%',
-            opacity: 0,
-            boxShadow: '0 0 50px 20px white'
+            boxShadow: '0 0 100px 40px white'
         }} />
 
-        <div className="finale-face-container">
-            <img src="/photos/photo-14.jpg" alt="Shariya" />
+        <div className="finale-face-container" style={{ position: 'relative', zIndex: 10 }}>
+            <img 
+                src="/photos/photo-14.jpg" 
+                alt="Shariya" 
+                style={{ 
+                    width: '300px', 
+                    height: '300px', 
+                    borderRadius: '50%', 
+                    objectFit: 'cover', 
+                    border: '8px solid var(--starlight-gold)',
+                    boxShadow: '0 0 50px rgba(255, 215, 0, 0.5)'
+                }} 
+            />
         </div>
 
-        <div className="finale-text" style={{ 
-            marginTop: '3rem', 
-            fontSize: '2rem', 
-            fontFamily: 'var(--font-serif)', 
-            color: 'var(--starlight-gold)',
-            textAlign: 'center',
-            maxWidth: '80%',
-            lineHeight: '1.6'
-        }}>
-            "To Shariya, the most beautiful 20-year-old in the universe"
-        </div>
-
-        <div className="finale-text" style={{ 
-            marginTop: '1rem', 
-            fontSize: '1.2rem', 
-            color: 'white', 
-            opacity: 0.7,
-            letterSpacing: '0.5em',
-            textAlign: 'center'
-        }}>
-            HAPPY BIRTHDAY
+        <div className="finale-text-group" style={{ textAlign: 'center', zIndex: 10, marginTop: '2rem' }}>
+            <div style={{ 
+                fontSize: '2.5rem', 
+                fontFamily: 'var(--font-serif)', 
+                color: 'var(--starlight-gold)',
+                maxWidth: '80vw',
+                margin: '0 auto',
+                lineHeight: '1.2'
+            }}>
+                "To Shariya, the most beautiful 20-year-old in the universe"
+            </div>
+            <div style={{ 
+                marginTop: '1.5rem', 
+                fontSize: '1rem', 
+                color: 'white', 
+                opacity: 0.6,
+                letterSpacing: '0.6em',
+                fontWeight: 'bold'
+            }}>
+                HAPPY BIRTHDAY
+            </div>
         </div>
 
         <button 
+            className="finale-back-btn"
             onClick={closeFinale}
             style={{ 
                 marginTop: '4rem', 
-                background: 'none', 
-                border: '1px solid white', 
-                color: 'white', 
-                padding: '10px 30px', 
+                background: 'white', 
+                border: 'none', 
+                color: 'black', 
+                padding: '15px 40px', 
                 borderRadius: '50px',
                 cursor: 'pointer',
                 fontFamily: 'var(--font-sans)',
+                fontWeight: 'bold',
                 letterSpacing: '0.1em',
-                transition: 'all 0.3s ease'
-            }}
-            onMouseOver={(e) => {
-              e.target.style.background = 'white';
-              e.target.style.color = 'black';
-            }}
-            onMouseOut={(e) => {
-              e.target.style.background = 'none';
-              e.target.style.color = 'white';
+                zIndex: 100,
+                boxShadow: '0 10px 30px rgba(0,0,0,0.5)'
             }}
         >
             Back to Memories
