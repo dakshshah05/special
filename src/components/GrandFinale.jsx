@@ -3,15 +3,18 @@ import gsap from 'gsap';
 
 export default function GrandFinale() {
   const [active, setActive] = useState(false);
+  const [hasTriggered, setHasTriggered] = useState(false);
   const finaleRef = useRef();
 
   useEffect(() => {
     const handleScroll = () => {
+      // If it's already triggered once, don't listen anymore
+      if (hasTriggered) return;
+
       const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
       const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
       const scrolled = (winScroll / height) * 100;
 
-      // Only trigger if we aren't already active and we've reached 99.5%
       if (scrolled >= 99.5 && !active) {
           triggerFinale();
       }
@@ -19,10 +22,11 @@ export default function GrandFinale() {
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [active]);
+  }, [active, hasTriggered]);
 
   const triggerFinale = () => {
     setActive(true);
+    setHasTriggered(true); // Mark as triggered so it never happens again
     const tl = gsap.timeline();
     
     tl.to(finaleRef.current, { opacity: 1, pointerEvents: 'auto', duration: 1 })
@@ -34,16 +38,20 @@ export default function GrandFinale() {
   };
 
   const closeFinale = () => {
-    // Fades out and then scrolls back up slightly so it doesn't immediately re-trigger
     gsap.to(finaleRef.current, { 
       opacity: 0, 
       pointerEvents: 'none', 
       duration: 0.5,
       onComplete: () => {
         setActive(false);
-        // Using window.scrollTo since we're using smooth-scroll usually but let's just jump or small move
-        // Actually, let's jump to the "Hero" or "Memories" section
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        // Scroll back to the Wishes section (or slightly above the very end)
+        const wishesSection = document.getElementById('wishes');
+        if (wishesSection) {
+          wishesSection.scrollIntoView({ behavior: 'smooth' });
+        } else {
+          // Fallback: Scroll up slightly
+          window.scrollBy({ top: -500, behavior: 'smooth' });
+        }
       }
     });
   };
