@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { PointerLockControls, OrbitControls, Environment, Float, Text, ContactShadows } from '@react-three/drei';
+import { PointerLockControls, OrbitControls, Float, Text, ContactShadows } from '@react-three/drei';
 import * as THREE from 'three';
 
 function Island() {
@@ -12,13 +12,11 @@ function Island() {
 
   return (
     <group ref={meshRef}>
-      {/* Main Island Base */}
       <mesh position={[0, -1, 0]}>
         <cylinderGeometry args={[5, 4, 2, 8, 1]} />
         <meshStandardMaterial color="#3a5a40" roughness={0.8} />
       </mesh>
       
-      {/* Floating Orbs / Lanterns */}
       {[...Array(5)].map((_, i) => (
         <Float key={i} speed={2} rotationIntensity={1} floatIntensity={1} position={[Math.cos(i) * 4, 3, Math.sin(i) * 4]}>
             <mesh>
@@ -29,7 +27,6 @@ function Island() {
         </Float>
       ))}
 
-      {/* Floating Letters */}
       <Text
         position={[0, 2, 0]}
         fontSize={1}
@@ -83,23 +80,22 @@ export default function SecretGarden() {
   const [active, setActive] = useState(false);
 
   return (
-    <section id="secret-garden" className="section" style={{ background: 'var(--deep-void)', position: 'relative' }}>
-      <div className="section-title-container" style={{ textAlign: 'center' }}>
-        <h2 className="garden-title">The Floating Garden 🪐</h2>
+    <section id="secret-garden" className="section" style={{ background: '#0a0010', position: 'relative' }}>
+      <div className="section-title-container" style={{ textAlign: 'center', padding: '2rem' }}>
+        <h2 className="garden-title" style={{ color: '#ff6eb4' }}>The Floating Garden 🪐</h2>
         <button 
             className="wish-button interactive" 
             onClick={() => setActive(!active)}
-            style={{ marginTop: '1rem' }}
+            style={{ marginTop: '1rem', background: 'none', border: '1px solid #ff6eb4', color: '#ff6eb4', padding: '10px 20px', borderRadius: '50px', cursor: 'pointer' }}
         >
           {active ? 'Exit Exploration' : 'Enter Exploration Mode (WASD)'}
         </button>
       </div>
 
-      <div style={{ width: '100%', height: '80vh', border: active ? '2px solid var(--rose-pink)' : 'none' }}>
-        <Canvas camera={{ position: [0, 5, 15], fov: 45 }}>
+      <div style={{ width: '100%', height: '80vh' }}>
+        <Canvas camera={{ position: [0, 5, 15], fov: 45 }} gl={{ antialias: false }}>
           <ambientLight intensity={0.5} />
           <pointLight position={[10, 10, 10]} intensity={1} />
-          <Environment preset="night" />
           
           <Island />
           {active ? <PointerLockControls /> : <OrbitControls enableZoom={false} />}

@@ -1,7 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { Center, Float, PerspectiveCamera, Environment, ContactShadows } from '@react-three/drei';
-import GiftBox from './GiftBox'; // Extracting to separate file or keeping internal
+import { Center, Float, PerspectiveCamera, ContactShadows } from '@react-three/drei';
+import GiftBox from './GiftBox';
 
 const reasons = [
   "Your smile lights up the darkest rooms. ✨",
@@ -19,11 +19,7 @@ const reasons = [
   "The way you care for others is legendary. ❤️",
   "You have a soul that sparkles with endless magic. ✨",
   "Your courage to face life is my biggest motivation. 🦁",
-  "You are the best friend anyone could wish for. 👫",
-  "Your eyes hold a universe of stories. 🌌",
-  "You make me want to be a better person. 📈",
-  "Your love is the anchor of my life. ⚓",
-  "You are Shariya - unique, radiant, and loved. 🌹"
+  "You are the best friend anyone could wish for. 👫"
 ];
 
 export default function GiftSection() {
@@ -58,7 +54,7 @@ export default function GiftSection() {
         <Canvas dpr={1} gl={{ antialias: false }}>
           <PerspectiveCamera makeDefault position={[0, 2, 8]} />
           <ambientLight intensity={0.5} />
-          <Environment preset="city" />
+          <pointLight position={[5, 5, 5]} intensity={1} />
           <Center>
             <Float speed={1} rotationIntensity={0.5} floatIntensity={0.5}>
               <GiftBox isOpen={isOpen} onClick={() => setIsOpen(true)} />
@@ -68,7 +64,7 @@ export default function GiftSection() {
         </Canvas>
         {isOpen && (
             <div className="gift-reasons-overlay" style={{ position: 'absolute', top: '10%', left: '50%', transform: 'translateX(-50%)', textAlign: 'center', width: '90%', pointerEvents: 'none', zIndex: 10 }}>
-                <div style={{ fontSize: '5rem', fontWeight: 'bold', color: 'var(--starlight-gold)', fontFamily: 'var(--font-serif)' }}>20</div>
+                <div style={{ fontSize: '5rem', fontWeight: 'bold', color: '#ff6eb4', fontFamily: 'serif' }}>20</div>
                 <div style={{ marginTop: '1rem', fontSize: '1.2rem', color: 'white', background: 'rgba(26, 5, 51, 0.8)', padding: '20px', borderRadius: '20px', backdropFilter: 'blur(10px)', border: '1px solid rgba(255, 215, 0, 0.3)' }}>
                     {typedText}
                 </div>

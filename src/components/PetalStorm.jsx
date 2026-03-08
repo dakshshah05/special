@@ -1,5 +1,5 @@
 import React, { useRef, useMemo, useEffect } from 'react';
-import { Canvas, useFrame, useLoader } from '@react-three/fiber';
+import { Canvas, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
 const PETAL_COUNT = 300; 
@@ -8,12 +8,8 @@ function Petals({ scrollVelocity }) {
   const meshRef = useRef();
   const dummy = useMemo(() => new THREE.Object3D(), []);
   
-  const textures = useLoader(THREE.TextureLoader, [
-    '/assets/rose_petal.png',
-    '/assets/cherry_blossom.png',
-    '/assets/lavender.png',
-    '/assets/gold_leaf.png'
-  ]);
+  // Basic colors as fallback to avoid texture loading issues
+  const colors = ['#ff6eb4', '#ffd700', '#e8c4ff', '#ffffff'];
 
   const petals = useMemo(() => {
     return Array.from({ length: PETAL_COUNT }, (_, i) => ({
@@ -24,7 +20,7 @@ function Petals({ scrollVelocity }) {
       rotSpeed: 0.5 + Math.random() * 1.5,
       phase: Math.random() * Math.PI * 2,
       size: 0.1 + Math.random() * 0.2,
-      textureIndex: i % 4
+      color: colors[i % 4]
     }));
   }, []);
 
@@ -58,8 +54,8 @@ function Petals({ scrollVelocity }) {
   return (
     <instancedMesh ref={meshRef} args={[null, null, PETAL_COUNT]}>
       <planeGeometry args={[1, 1]} />
-      <meshStandardMaterial 
-        map={textures[0]} 
+      <meshBasicMaterial 
+        color="#ff6eb4"
         transparent 
         opacity={0.6} 
         side={THREE.DoubleSide}
@@ -96,9 +92,7 @@ export default function PetalStorm() {
       >
         <ambientLight intensity={0.7} />
         <pointLight position={[10, 10, 10]} intensity={1} />
-        <React.Suspense fallback={null}>
-            <Petals scrollVelocity={scrollVelocity} />
-        </React.Suspense>
+        <Petals scrollVelocity={scrollVelocity} />
       </Canvas>
     </div>
   );

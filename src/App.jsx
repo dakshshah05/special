@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, Suspense } from 'react';
+import React, { useState, useEffect, useRef, Suspense, useCallback } from 'react';
 import Lenis from '@studio-freight/lenis';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -31,7 +31,14 @@ gsap.registerPlugin(ScrollTrigger, TextPlugin);
 
 export default function App() {
   const [loaded, setLoaded] = useState(false);
+  const [showMain, setShowMain] = useState(false);
   const lenisRef = useRef(null);
+
+  const handleLoadingComplete = useCallback(() => {
+    setLoaded(true);
+    // Short delay to ensure transition starts after state update
+    setTimeout(() => setShowMain(true), 100);
+  }, []);
 
   useEffect(() => {
     const lenis = new Lenis({
@@ -53,42 +60,59 @@ export default function App() {
 
   return (
     <>
-      <Loader onComplete={() => setLoaded(true)} />
+      {/* Loader removed from DOM once completely done to prevent loops and memory issues */}
+      {!showMain && <Loader onComplete={handleLoadingComplete} />}
       
-      <Suspense fallback={<div style={{ background: '#0a0010', position: 'fixed', inset: 0, zIndex: 1000000 }}></div>}>
-        {/* Global Interactive Elements - always mounted but opacity controlled */}
-        <div style={{ opacity: loaded ? 1 : 0, transition: 'opacity 1s ease' }}>
-            <EnhancedCursor />
-            <Navigation />
+      {/* Everything else is only truly interactive once loaded */}
+      <div style={{ 
+          opacity: loaded ? 1 : 0, 
+          pointerEvents: loaded ? 'auto' : 'none',
+          transition: 'opacity 1s ease' 
+      }}>
+        <EnhancedCursor />
+        <Navigation />
+        <Suspense fallback={null}>
             <PetalStorm />
-            <LoveMeter />
-            <ReactionPanel />
-            <GrandFinale />
-            <ShakeHug />
-        </div>
+        </Suspense>
+        <LoveMeter />
+        <ReactionPanel />
+        <GrandFinale />
+        <ShakeHug />
 
         {/* Background Atmosphere */}
-        <DynamicEnvironment />
-        <ParallaxLayers />
+        <Suspense fallback={null}>
+            <DynamicEnvironment />
+            <ParallaxLayers />
+        </Suspense>
 
         <main style={{ 
-            opacity: loaded ? 1 : 0, 
-            transition: 'opacity 0.8s ease',
             position: 'relative',
-            zIndex: 20 
+            zIndex: 20,
+            visibility: loaded ? 'visible' : 'hidden'
         }}>
-            <SecretGarden />
+            <Suspense fallback={<div style={{ height: '50vh' }}></div>}>
+                <SecretGarden />
+            </Suspense>
+            
             <div style={{ position: 'relative' }}>
                 <HeroSection />
                 <FloatingBalloons />
             </div>
+
             <TimelineSection />
             <PhotoCarousel />
             <MessageSection />
-            <RoseGarden onGoldenRoseClick={() => {}} />
+
+            <Suspense fallback={null}>
+                <RoseGarden onGoldenRoseClick={() => {}} />
+            </Suspense>
+
             <CakeSection />
-            <GiftSection />
+            <Suspense fallback={null}>
+                <GiftSection />
+            </Suspense>
             <WishesSection />
+            
             <PhysicsPlayground />
             <EmojiParade />
             <LoveLetter />
@@ -107,7 +131,7 @@ export default function App() {
                 <p>✦ March 11th · Twenty ✦</p>
             </footer>
         </main>
-      </Suspense>
+      </div>
     </>
   );
 }

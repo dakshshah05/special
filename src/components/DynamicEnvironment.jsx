@@ -79,7 +79,7 @@ export default function DynamicEnvironment() {
     <div style={{ position: 'fixed', inset: 0, zIndex: -2 }}>
       <Canvas 
         gl={{ antialias: false, powerPreference: 'high-performance' }}
-        dpr={[1, 1]} // Fix resolution for background
+        dpr={1} // Fix resolution for background
       >
         <AmbientParticles mood={currentMood} />
       </Canvas>
