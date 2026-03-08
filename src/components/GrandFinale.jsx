@@ -87,11 +87,15 @@ export default function GrandFinale() {
       onComplete: () => {
         gsap.set(finaleRef.current, { display: 'none', pointerEvents: 'none' });
         setActive(false);
-        // Scroll to Wishes section
-        const wishesSection = document.getElementById('wishes');
-        if (wishesSection) {
-            wishesSection.scrollIntoView({ behavior: 'smooth' });
-        }
+        
+        // Use a timeout to ensure Lenis/Browser has processed the state change
+        setTimeout(() => {
+          const wishesSection = document.getElementById('wishes');
+          if (wishesSection) {
+              const top = wishesSection.getBoundingClientRect().top + window.pageYOffset;
+              window.scrollTo({ top: top - 50, behavior: 'smooth' });
+          }
+        }, 100);
       }
     });
   };

@@ -89,16 +89,19 @@ export default function LoveLetter() {
                 position: 'fixed',
                 inset: 0,
                 background: 'rgba(10, 0, 16, 0.98)',
-                zIndex: 20000,
+                zIndex: 3000000, // Above everything including Finale if needed
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                perspective: '1000px'
+                perspective: '1000px',
+                pointerEvents: 'auto'
             }}
           >
+            {/* 3D Parchment Container */}
             <motion.div 
               ref={parchmentRef}
               className="parchment-container"
+              data-lenis-prevent
               onScroll={handleScroll}
               initial={{ rotateX: 20, y: 100, scale: 0.9 }}
               animate={{ rotateX: 0, y: 0, scale: 1 }}
