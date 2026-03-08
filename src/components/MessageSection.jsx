@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useMemo } from 'react';
+import React, { useEffect, useRef, useMemo, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import gsap from 'gsap';
@@ -86,7 +86,7 @@ Happy 20th Birthday, Shariya 🌹`;
 export default function MessageSection() {
   const sectionRef = useRef(null);
   const textContainerRef = useRef(null);
-  const [envelopeProgress, setEnvelopeProgress] = React.useState(0);
+  const [envelopeProgress, setEnvelopeProgress] = useState(0);
 
   useEffect(() => {
     const section = sectionRef.current;
